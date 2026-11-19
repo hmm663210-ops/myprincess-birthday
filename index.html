@@ -258,5 +258,62 @@
     setInterval(updateCounters, 1000);
     updateCounters();
   </script>
+  <!-- ==================== إضافة القلوب المتطايرة وزر العناق ==================== -->
+<div class="hug-section" dir="rtl">
+  <button class="hug-btn" onclick="sendPandaHug()">اضغطي هنا لأحلى حضن من الباندا 🐼💜</button>
+  <p id="hug-reply" class="hug-reply"></p>
+</div>
+
+<style>
+  .hug-section { text-align: center; margin: 20px 0 40px; position: relative; z-index: 10; }
+  .hug-btn {
+    background: linear-gradient(135deg, #6a1b9a, #ad1457); color: white;
+    border: 2px solid #f8bbd0; padding: 14px 28px; border-radius: 50px;
+    font-size: 1.1rem; font-weight: bold; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(106, 27, 154, 0.35); transition: transform 0.2s;
+  }
+  .hug-btn:active { transform: scale(0.95); }
+  .hug-reply {
+    font-size: 1.15rem; font-weight: bold; color: #7b1fa2; margin-top: 12px;
+    min-height: 28px; transition: opacity 0.3s;
+  }
+  .floating-heart {
+    position: fixed; bottom: -20px; font-size: 1.8rem; pointer-events: none;
+    animation: floatUp 3s ease-out forwards; z-index: 99999;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) scale(0.8); opacity: 1; }
+    100% { transform: translateY(-90vh) scale(1.4); opacity: 0; }
+  }
+</style>
+
+<script>
+  const sweetMessages = [
+    "وصل الحضن بنجاح! أحبك قد الدنيا كلها 💜🐼",
+    "أنتِ أجمل شيء صار بحياتي ✨👑",
+    "يا بخت الدنيا فيكِ يا أميرتي 💜🌸",
+    "كل ضغطة تزيد حبي لكِ أضعاف 💗✨",
+    "ابتسمي، ضحكتك تسوى الكون كله 👑💜"
+  ];
+
+  function sendPandaHug() {
+    // إظهار رسالة عشوائية لطيفة
+    const msg = sweetMessages[Math.floor(Math.random() * sweetMessages.length)];
+    document.getElementById("hug-reply").innerText = msg;
+
+    // إطلاق 15 قلب متطاير في الشاشة
+    const hearts = ["💜", "🩷", "💖", "👑", "🐼"];
+    for (let i = 0; i < 15; i++) {
+      const heart = document.createElement("div");
+      heart.className = "floating-heart";
+      heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.left = Math.random() * 90 + 5 + "vw";
+      heart.style.animationDuration = (Math.random() * 1.5 + 2) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3500);
+    }
+  }
+</script>
+
 </body>
 </html>
