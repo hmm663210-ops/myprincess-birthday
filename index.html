@@ -282,32 +282,61 @@
         }
         animateConfetti();
 
-        // الموسيقى المدمجة
+            // الموسيقى المدمجة (اللحن الكامل مع التكرار المستمر)
         let audioCtx = null;
-        function playBirthdayTune() {
+        let musicLoop = null;
+        let isMusicOn = false;
+
+        function playFullBirthdayMelody() {
+            if (!isMusicOn) return;
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
+
             const notes = [
                 [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [349.2, 0.6], [329.6, 1.0],
-                [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [392.0, 0.6], [349.2, 1.0]
+                [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [392.0, 0.6], [349.2, 1.0],
+                [261.6, 0.3], [261.6, 0.3], [523.2, 0.6], [440.0, 0.6], [349.2, 0.6], [329.6, 0.6], [293.6, 1.0],
+                [466.1, 0.3], [466.1, 0.3], [440.0, 0.6], [349.2, 0.6], [392.0, 0.6], [349.2, 1.2]
             ];
+
             let time = audioCtx.currentTime;
             notes.forEach(([freq, dur]) => {
-                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-                osc.type = 'sine'; osc.frequency.setValueAtTime(freq, time);
-                gain.gain.setValueAtTime(0.12, time); gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(time); osc.stop(time + dur);
-                time += dur + 0.05;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, time);
+                gain.gain.setValueAtTime(0.12, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(time);
+                osc.stop(time + dur);
+                time += dur + 0.06;
             });
-        }
-        function toggleMusic() {
-            if (!audioCtx) { playBirthdayTune(); document.getElementById("music-btn").innerText = "🎵"; }
-            else if (audioCtx.state === 'running') { audioCtx.suspend(); document.getElementById("music-btn").innerText = "🔇"; }
-            else { audioCtx.resume(); document.getElementById("music-btn").innerText = "🎵"; }
+
+            clearTimeout(musicLoop);
+            musicLoop = setTimeout(() => {
+                if (isMusicOn) playFullBirthdayMelody();
+            }, 16500);
         }
 
-        function checkPass() {
+        function playBirthdayTune() {
+            isMusicOn = true;
+            document.getElementById("music-btn").innerText = "🎵";
+            playFullBirthdayMelody();
+        }
+
+        function toggleMusic() {
+            if (!isMusicOn) {
+                playBirthdayTune();
+            } else {
+                isMusicOn = false;
+                clearTimeout(musicLoop);
+                if (audioCtx) audioCtx.suspend();
+                document.getElementById("music-btn").innerText = "🔇";
+            }
+        }
+
             const val = document.getElementById("pass-input").value.trim();
             if (val === "632007" || val === "362007") {
                 document.getElementById("lock-screen").style.display = "none";
