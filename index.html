@@ -163,7 +163,7 @@
             <button class="btn close-btn" onclick="closeModal()">إغلاق</button>
         </div>
     </div>
-    <script>
+        <script>
         let devMode = false;
         const gifts = [
             { date: "2026-11-19", label: "اليوم الأول", title: "بداية المفاجآت ✨", icon: "🎁", msg: "أول هدية لكِ يا أميرتي، كل يوم يقربنا أكثر ليومك المميز 💜" },
@@ -180,7 +180,7 @@
             const today = new Date();
             let unlockedCount = 0;
 
-            gifts.forEach((g, idx) => {
+            gifts.forEach((g) => {
                 const gDate = new Date(g.date);
                 const isUnlocked = devMode || today >= gDate;
                 if (isUnlocked) unlockedCount++;
@@ -224,13 +224,11 @@
 
         function updateTimers() {
             const now = new Date();
-            // 1. عداد عيد الميلاد القادم (6 مارس)
             let nextBday = new Date(now.getFullYear(), 2, 6);
             if (now > nextBday) nextBday.setFullYear(now.getFullYear() + 1);
             const diffDays = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
             document.getElementById("countdownText").innerText = `باقي ${diffDays} يوم على يومك المميز (6 مارس) 🎂💜`;
 
-            // 2. عداد العمر منذ 6 مارس 2007
             const start = new Date("2007-03-06T00:00:00");
             let years = now.getFullYear() - start.getFullYear();
             let months = now.getMonth() - start.getMonth();
@@ -282,7 +280,7 @@
         }
         animateConfetti();
 
-            // الموسيقى المدمجة (اللحن الكامل مع التكرار المستمر)
+        // الموسيقى المدمجة الكاملة مع التكرار
         let audioCtx = null;
         let musicLoop = null;
         let isMusicOn = false;
@@ -305,7 +303,7 @@
                 const gain = audioCtx.createGain();
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(freq, time);
-                gain.gain.setValueAtTime(0.12, time);
+                gain.gain.setValueAtTime(0.14, time);
                 gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -317,7 +315,7 @@
             clearTimeout(musicLoop);
             musicLoop = setTimeout(() => {
                 if (isMusicOn) playFullBirthdayMelody();
-            }, 16500);
+            }, 15500);
         }
 
         function playBirthdayTune() {
@@ -337,6 +335,7 @@
             }
         }
 
+        function checkPass() {
             const val = document.getElementById("pass-input").value.trim();
             if (val === "632007" || val === "362007") {
                 document.getElementById("lock-screen").style.display = "none";
