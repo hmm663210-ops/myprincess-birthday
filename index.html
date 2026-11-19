@@ -1,319 +1,326 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Princess's Birthday 👑💜</title>
-  <link href="https://googleapis.com" rel="stylesheet">
-  <script src="https://jsdelivr.net"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Princess's Birthday 👑</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body {
+            background-color: #7c6ba8;
+            background-image: linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%), linear-gradient(rgba(255,255,255,.07) 50%, transparent 50%);
+            background-size: 35px 35px;
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px; color: #fff; overflow-x: hidden; position: relative;
+        }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99998; }
+        .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .floating-heart { position: absolute; opacity: 0.25; animation: floatUp 8s infinite ease-in-out; user-select: none; }
+        @keyframes floatUp { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-18px) rotate(8deg); } }
+        .container {
+            position: relative; z-index: 1; width: 100%; max-width: 1050px; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.28); border-radius: 25px; padding: 30px 18px;
+            text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); margin: 15px 0;
+        }
+        h1 { font-size: 1.9rem; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); direction: ltr; }
+        .subtitle { font-size: 1rem; color: #f3e8ff; margin-bottom: 6px; direction: ltr; }
+        .love-note { font-size: 1.15rem; font-weight: 900; color: #ffd6e7; margin-bottom: 45px; direction: ltr; text-shadow: 0 2px 8px rgba(255,107,157,0.4); }
+        .timeline-wrapper { position: relative; width: 100%; padding: 35px 0 15px 0; margin: 10px 0; }
+        .track-bg { position: relative; width: 100%; height: 12px; background: rgba(255, 255, 255, 0.25); border-radius: 10px; direction: ltr; }
+        .track-fill {
+            height: 100%; width: 5%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 50%, #ff6b9d 100%);
+            border-radius: 10px; transition: width 1.5s ease-in-out; position: relative; box-shadow: 0 0 15px rgba(255, 107, 157, 0.7);
+        }
+        .panda { position: absolute; right: -20px; top: -44px; font-size: 38px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); animation: bounce 2s infinite ease-in-out; user-select: none; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+        .milestones { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 25px; direction: ltr; gap: 10px; }
+        .milestone {
+            background: rgba(255, 255, 255, 0.16); border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 18px; padding: 14px 8px; cursor: pointer; transition: all 0.2s ease; direction: rtl; position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .milestone:active { transform: scale(0.96); }
+        .milestone.unlocked { background: rgba(255, 107, 157, 0.38); border-color: #ff9ec2; box-shadow: 0 0 20px rgba(255, 107, 157, 0.4); animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 107, 157, 0.4); } 50% { box-shadow: 0 0 25px rgba(255, 107, 157, 0.8); } }
+        .gift-icon { font-size: 2rem; margin-bottom: 6px; display: block; }
+        .date-label { font-size: 0.82rem; font-weight: 700; color: #ffd6e7; display: block; }
+        .title-label { font-size: 0.92rem; font-weight: 700; margin-top: 3px; display: block; }
+        .status-badge { display: inline-block; margin-top: 8px; font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; background: rgba(0, 0, 0, 0.25); }
+        .unlocked .status-badge { background: #ff4d8d; color: #fff; font-weight: bold; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal-content { background: #fff; color: #4a3b6e; padding: 28px 22px; border-radius: 25px; max-width: 380px; width: 100%; text-align: center; position: relative; animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-icon { font-size: 3.2rem; margin-bottom: 12px; }
+        .modal-title { font-size: 1.35rem; font-weight: 900; margin-bottom: 10px; color: #7c6ba8; }
+        .modal-text { font-size: 0.98rem; line-height: 1.6; margin-bottom: 20px; color: #555; }
+        .btn { display: inline-block; background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4); width: 100%; }
+        .close-btn { background: #eee; color: #555; margin-top: 10px; box-shadow: none; }
+        .days-left-banner { margin-top: 25px; font-size: 0.92rem; background: rgba(255, 255, 255, 0.16); padding: 10px 18px; border-radius: 50px; display: inline-block; }
+        .dev-btn { position: fixed; top: 15px; left: 12px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); width: 32px; height: 32px; border-radius: 50%; font-size: 14px; cursor: pointer; z-index: 999; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .dev-btn:hover { opacity: 1; background: rgba(255,255,255,0.3); }
+
+        /* تنسيق الإضافات الجديدة بنفس روح التصميم */
+        .story-box { margin-top: 30px; background: rgba(255, 255, 255, 0.16); border: 1.5px solid rgba(255, 255, 255, 0.32); border-radius: 20px; padding: 22px 18px; }
+        .story-title { font-family: 'Lalezar', 'Cairo', sans-serif; font-size: 1.85rem; color: #ffd6e7; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .story-text { font-size: 1.05rem; line-height: 1.9; color: #fff; }
+        .story-text strong { color: #ffd6e7; font-weight: 900; }
+        .life-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .life-item { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 14px; padding: 8px 14px; min-width: 65px; }
+        .life-item span { display: block; font-size: 1.3rem; font-weight: 900; color: #ffd6e7; }
+        .life-item small { font-size: 0.8rem; color: #f3e8ff; }
+        .miss-btn { margin-top: 22px; background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: #fff; border: none; padding: 13px 28px; border-radius: 50px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.45); transition: transform 0.2s; }
+        .miss-btn:hover { transform: scale(1.05); }
+        .coming-soon { display: none; margin-top: 12px; font-family: 'Poppins', sans-serif; font-size: 1.3rem; font-weight: 600; color: #ffd6e7; background: rgba(0,0,0,0.22); padding: 10px 24px; border-radius: 15px; border: 1.5px dashed #ffd6e7; }
+
+        /* شاشة القفل والموسيقى */
+        #lock-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #4b3869, #7c6ba8, #5e4b8b); display: flex; justify-content: center; align-items: center; z-index: 999999; padding: 20px; }
+        .lock-box { background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(15px); padding: 35px 25px; border-radius: 25px; border: 2px solid rgba(255, 255, 255, 0.3); width: 100%; max-width: 370px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.25); }
+        .lock-box input { width: 85%; padding: 12px; border-radius: 50px; border: none; outline: none; text-align: center; font-size: 1.1rem; margin: 15px 0; }
+        .lock-box button { background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: white; border: none; padding: 12px 35px; border-radius: 50px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4); }
+        #error-msg { color: #ffd6e7; font-size: 0.9rem; margin-top: 12px; display: none; font-weight: bold; }
+        #music-btn { position: fixed; bottom: 18px; left: 18px; width: 46px; height: 46px; border-radius: 50%; background: rgba(255, 107, 157, 0.85); color: white; border: 2px solid rgba(255,255,255,0.6); font-size: 1.3rem; cursor: pointer; z-index: 999; }
+
+        @media (max-width: 768px) {
+            .milestones { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            h1 { font-size: 1.45rem; }
+            .subtitle { font-size: 0.9rem; }
+            .container { padding: 25px 14px; }
+        }
+    </style>
 </head>
 <body>
+    <canvas id="confetti-canvas"></canvas>
 
-  <!-- شاشة القفل (تقبل 362007 أو 632007) -->
-  <div id="lock-screen">
-    <div class="lock-box">
-      <div class="lock-icon">👑💜</div>
-      <h2>منطقة خاصة للأميرة</h2>
-      <p>اكتبي كلمة السر لفتح المفاجأة ✨</p>
-      <input type="password" id="pass-input" placeholder="كلمة السر هنا..." onkeypress="if(event.key==='Enter') checkPass()">
-      <button onclick="checkPass()">فتح 🔑</button>
-      <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
-    </div>
-  </div>
-
-  <!-- زر الموسيقى العائم -->
-  <button id="music-btn" onclick="toggleMusic()" title="تشغيل/إيقاف الموسيقى">🎵</button>
-  <audio id="bg-music" loop>
-    <source src="https://pixabay.com" type="audio/mpeg">
-  </audio>
-
-  <!-- المحتوى الرئيسي للموقع -->
-  <div class="main-container">
-    <div class="hearts-bar">💜 🩷 💗 💜 🩷 💗</div>
-    <h1 class="main-title" dir="ltr">My Princess's Birthday 👑💜</h1>
-    <p class="sub-text" dir="ltr">Every day brings the panda closer to your special day ✨</p>
-    <p class="love-text" dir="ltr">I love you 💜</p>
-    
-    <div class="panda-bounce">🐼</div>
-
-    <!-- عداد الأيام المتبقية لـ 6 مارس -->
-    <div class="purple-card">
-      <h3 class="card-subtitle">العد التنازلي ليومك المميز (6 مارس) 🎂✨</h3>
-      <div id="birthday-countdown" class="counter-grid">جاري حساب الأيام...</div>
+    <!-- شاشة القفل (تقبل 632007 أو 362007) -->
+    <div id="lock-screen">
+        <div class="lock-box">
+            <div style="font-size: 3.5rem; margin-bottom: 8px;">👑💜</div>
+            <h2 style="color: #ffd6e7; margin-bottom: 6px;">منطقة خاصة للأميرة</h2>
+            <p style="font-size: 0.95rem; color: #f3e8ff;">اكتبي كلمة السر لفتح المفاجأة ✨</p>
+            <input type="password" id="pass-input" placeholder="كلمة السر هنا..." onkeypress="if(event.key==='Enter') checkPass()">
+            <br>
+            <button onclick="checkPass()">فتح 🔑</button>
+            <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
+        </div>
     </div>
 
-    <!-- صندوق الهدية -->
-    <div class="gift-section">
-      <button class="gift-btn" onclick="openGift()">🎁</button>
-      <p class="gift-hint">اضغطي على الهدية لفتحها ✨</p>
+    <div class="hearts-bg">
+        <span class="floating-heart" style="top: 8%; left: 10%; font-size: 24px;">💜</span>
+        <span class="floating-heart" style="top: 15%; right: 12%; font-size: 28px; animation-delay: 1s;">🩷</span>
+        <span class="floating-heart" style="top: 45%; left: 6%; font-size: 22px; animation-delay: 2s;">💗</span>
+        <span class="floating-heart" style="top: 55%; right: 8%; font-size: 26px; animation-delay: 3s;">💜</span>
+        <span class="floating-heart" style="bottom: 12%; left: 15%; font-size: 30px; animation-delay: 1.5s;">🩷</span>
+        <span class="floating-heart" style="bottom: 18%; right: 14%; font-size: 22px; animation-delay: 2.5s;">💗</span>
     </div>
 
-    <!-- نافذة الهدية المنبثقة -->
-    <div id="gift-modal" class="modal">
-      <div class="modal-content">
-        <h3>كل عام وأنتِ بألف خير يا أميرتي 👑💜</h3>
-        <p>أتمنى لكِ سنة مليانة سعادة وضحكة ما تفارق وجهك، وكل أيامك تكون حلوة مثلك يا أجمل إنسانة في حياتي 🐼✨</p>
-        <button class="close-btn" onclick="closeGift()">إغلاق</button>
-      </div>
+    <button class="dev-btn" onclick="enableDevMode()" title="Developer Mode">🔑</button>
+    <button id="music-btn" onclick="toggleMusic()" title="تشغيل/إيقاف الموسيقى">🎵</button>
+
+    <div class="container">
+        <h1>My Princess's Birthday 👑💜</h1>
+        <p class="subtitle">Every day brings the panda closer to your special day ✨</p>
+        <p class="love-note">I love you 💜</p>
+        <div class="timeline-wrapper">
+            <div class="track-bg">
+                <div class="track-fill" id="progressBar"><div class="panda">🐼</div></div>
+            </div>
+            <div class="milestones" id="milestonesContainer"></div>
+        </div>
+        <div class="days-left-banner" id="countdownText">جاري حساب الأيام...</div>
+
+        <!-- قسم بداية القصة (تحت الهدايا مباشرة) -->
+        <div class="story-box">
+            <h2 class="story-title">بداية القصة : 💜</h2>
+            <p class="story-text">
+                بدأت القصة في <strong>6 مارس 2007</strong>، في ذلك اليوم المميز الذي أشرقت فيه الدنيا بميلاد أمز وأجمل شخص في الكون ✨<br>
+                ومنذ تلك اللحظة، صار للعالم لون مختلف وجمال لا يشبه أحداً، وكأن كل الأيام كانت تستعد لتحتفي بوجودك.<br>
+                كل عام وأنتِ أجمل حكاية بدأت، وأغلى ما في هذا الكون 💜👑
+            </p>
+        </div>
+
+        <!-- عداد الوقت منذ 6 مارس 2007 -->
+        <div class="story-box">
+            <h3 style="color: #ffd6e7; font-size: 1.15rem;">مضى على بداية هذه القصة الجميلة ⏳✨</h3>
+            <div id="life-counter" class="life-grid"></div>
+        </div>
+
+        <!-- زر كل ما اشتقتي لي -->
+        <div>
+            <button class="miss-btn" onclick="showComingSoon()">اضغطي هنا كل ما اشتقتي لي 💌</button>
+            <br>
+            <div id="coming-soon-box" class="coming-soon" dir="ltr">Coming Soon... 💜✨</div>
+        </div>
     </div>
-    <!-- قسم بداية القصة -->
-    <div class="purple-card">
-      <h2 class="card-title">بداية القصة : 💜</h2>
-      <p class="card-text">
-        بدأت القصة في <strong>6 مارس 2007</strong>، في ذلك اليوم المميز الذي أشرقت فيه الدنيا بميلاد أمز وأجمل شخص في الكون ✨<br>
-        ومنذ تلك اللحظة، صار للعالم لون مختلف وجمال لا يشبه أحداً، وكأن كل الأيام كانت تستعد لتحتفي بوجودك.<br>
-        كل عام وأنتِ أجمل حكاية بدأت، وأغلى ما في هذا الكون 💜👑
-      </p>
+
+    <div class="modal" id="giftModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">🎁</div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-text" id="modalText"></p>
+            <div id="modalAction"></div>
+            <button class="btn close-btn" onclick="closeModal()">إغلاق</button>
+        </div>
     </div>
+    <script>
+        let devMode = false;
+        const gifts = [
+            { date: "2026-11-19", label: "اليوم الأول", title: "بداية المفاجآت ✨", icon: "🎁", msg: "أول هدية لكِ يا أميرتي، كل يوم يقربنا أكثر ليومك المميز 💜" },
+            { date: "2026-12-15", label: "15 ديسمبر", title: "رسالة حب 💌", icon: "💝", msg: "أنتِ أجمل نعمة في حياتي، وجودك يخلي كل أيامي أحلى 🐼🩷" },
+            { date: "2027-01-01", label: "1 يناير", title: "سنة جديدة معك 🎆", icon: "✨", msg: "سنة جديدة تبدأ وأنتِ أميرتي وأغلى ما أملك في هذا الكون 👑💜" },
+            { date: "2027-02-14", label: "14 فبراير", title: "يوم الحب 💗", icon: "💖", msg: "كل يوم معك هو عيد، أحبك قد السماء والنجوم 💜✨" },
+            { date: "2027-03-01", label: "1 مارس", title: "العد التنازلي ⏳", icon: "🎀", msg: "باقي أيام قليلة على أجمل يوم في السنة.. يوم ميلادك 👑🎂" },
+            { date: "2027-03-06", label: "6 مارس", title: "يوم الأميرة 👑", icon: "🎂", msg: "كل عام وأنتِ بألف خير يا أمز وأجمل شخص في الكون! عيد ميلاد سعيد أميرتي 💜👑🐼" }
+        ];
 
-    <!-- عداد الوقت منذ 6 مارس 2007 -->
-    <div class="purple-card">
-      <h3 class="card-subtitle">مضى على بداية هذه القصة الجميلة ⏳✨</h3>
-      <div id="life-counter" class="counter-grid">جاري حساب اللحظات...</div>
-    </div>
+        function renderMilestones() {
+            const container = document.getElementById("milestonesContainer");
+            container.innerHTML = "";
+            const today = new Date();
+            let unlockedCount = 0;
 
-    <!-- زر كل ما اشتقتي لي -->
-    <div class="miss-you-wrapper">
-      <button class="miss-you-btn" onclick="showComingSoon()">
-        اضغطي هنا كل ما اشتقتي لي 💌
-      </button>
-      <div id="coming-soon-box" class="coming-soon-msg" dir="ltr">
-        Coming Soon... 💜✨
-      </div>
-    </div>
-  </div>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; padding: 20px 15px;
-      background: linear-gradient(135deg, #f3e5f5, #fce4ec, #ede7f6);
-      min-height: 100vh; font-family: 'Cairo', sans-serif; color: #4a235a;
-      text-align: center;
-    }
-    .main-container { max-width: 600px; margin: 0 auto; }
-    .hearts-bar { font-size: 1.5rem; margin-bottom: 10px; letter-spacing: 5px; }
-    .main-title { font-family: 'Poppins', sans-serif; font-size: 2rem; color: #7b1fa2; margin: 10px 0; }
-    .sub-text { font-family: 'Poppins', sans-serif; font-size: 1.05rem; color: #6a1b9a; margin: 5px 0; }
-    .love-text { font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: bold; color: #ad1457; margin: 10px 0; }
-    
-    .panda-bounce { font-size: 4rem; margin: 15px 0; animation: bounce 2s infinite; display: inline-block; }
-    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+            gifts.forEach((g, idx) => {
+                const gDate = new Date(g.date);
+                const isUnlocked = devMode || today >= gDate;
+                if (isUnlocked) unlockedCount++;
 
-    .purple-card {
-      background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(10px);
-      border: 2px solid rgba(155, 89, 182, 0.35); border-radius: 22px;
-      padding: 22px 18px; margin: 22px 0;
-      box-shadow: 0 8px 25px rgba(155, 89, 182, 0.15);
-    }
-    .card-title { font-family: 'Lalezar', 'Cairo', sans-serif; font-size: 2rem; color: #8e44ad; margin: 0 0 12px; }
-    .card-subtitle { font-size: 1.25rem; color: #8e44ad; margin: 0 0 15px; font-weight: 700; }
-    .card-text { font-size: 1.1rem; line-height: 1.9; color: #4a235a; margin: 0; }
-    .card-text strong { color: #9b59b6; }
+                const div = document.createElement("div");
+                div.className = "milestone" + (isUnlocked ? " unlocked" : "");
+                div.innerHTML = `
+                    <span class="gift-icon">${isUnlocked ? g.icon : "🔒"}</span>
+                    <span class="date-label">${g.label}</span>
+                    <span class="title-label">${g.title}</span>
+                    <span class="status-badge">${isUnlocked ? "مفتوحة ✨" : "مقفلة"}</span>
+                `;
+                div.onclick = () => openGiftModal(g, isUnlocked);
+                container.appendChild(div);
+            });
 
-    .counter-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-    .time-box {
-      background: #f8eafc; border: 1px solid #d2b4de; border-radius: 12px;
-      padding: 10px 14px; min-width: 65px;
-    }
-    .time-box span { display: block; font-size: 1.35rem; font-weight: bold; color: #8e44ad; }
-    .time-box small { font-size: 0.85rem; color: #5b2c6f; }
-
-    /* الهدية */
-    .gift-section { margin: 25px 0; }
-    .gift-btn {
-      font-size: 4.5rem; background: none; border: none; cursor: pointer;
-      transition: transform 0.3s; animation: pulse 1.8s infinite;
-    }
-    .gift-btn:hover { transform: scale(1.15); }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-    .gift-hint { font-size: 0.95rem; color: #8e44ad; margin-top: 5px; font-weight: bold; }
-
-    /* نافذة الهدية */
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9998;
-    }
-    .modal-content {
-      background: white; padding: 30px 25px; border-radius: 22px; max-width: 400px; width: 85%;
-      border: 3px solid #9b59b6; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    .modal-content h3 { color: #8e44ad; margin-top: 0; }
-    .modal-content p { line-height: 1.8; font-size: 1.1rem; }
-    .close-btn {
-      background: #8e44ad; color: white; border: none; padding: 10px 25px;
-      border-radius: 12px; font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer;
-    }
-
-    /* زر الاشتياق */
-    .miss-you-wrapper { margin: 25px 0 50px; }
-    .miss-you-btn {
-      background: linear-gradient(45deg, #8e44ad, #ff69b4); color: white;
-      border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.15rem;
-      font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer;
-      box-shadow: 0 6px 20px rgba(142, 68, 173, 0.35); transition: transform 0.2s;
-    }
-    .miss-you-btn:hover { transform: scale(1.05); }
-    .coming-soon-msg {
-      display: none; margin-top: 15px; font-family: 'Poppins', sans-serif;
-      font-size: 1.4rem; font-weight: 700; color: #8e44ad;
-      background: rgba(255, 255, 255, 0.9); padding: 12px 28px;
-      border-radius: 15px; border: 2px dashed #9b59b6;
-    }
-
-    /* القفل والموسيقى */
-    #lock-screen {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: linear-gradient(135deg, #2c003e, #510a32, #801336);
-      display: flex; justify-content: center; align-items: center; z-index: 999999;
-    }
-    .lock-box {
-      background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(15px);
-      padding: 35px 25px; border-radius: 25px; border: 2px solid rgba(255, 182, 193, 0.4);
-      width: 85%; max-width: 380px; color: white;
-    }
-    .lock-icon { font-size: 3.5rem; margin-bottom: 10px; }
-    .lock-box h2 { margin: 0 0 10px; color: #ffb6c1; }
-    .lock-box p { margin: 0 0 20px; color: #f8e1f4; }
-    .lock-box input {
-      width: 85%; padding: 12px; border-radius: 12px; border: none;
-      text-align: center; font-size: 1.1rem; margin-bottom: 15px;
-    }
-    .lock-box button {
-      background: linear-gradient(45deg, #9b59b6, #ff69b4); color: white;
-      border: none; padding: 12px 35px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-    }
-    #error-msg { color: #ff6b81; font-size: 0.95rem; margin-top: 12px; display: none; }
-    #music-btn {
-      position: fixed; bottom: 20px; left: 20px; width: 50px; height: 50px;
-      border-radius: 50%; background: linear-gradient(45deg, #8e44ad, #ff69b4);
-      color: white; border: 2px solid white; font-size: 1.4rem; cursor: pointer; z-index: 9999;
-    }
-  </style>
-
-  <script>
-    function checkPass() {
-      const val = document.getElementById("pass-input").value;
-      if (val === "362007" || val === "632007") {
-        document.getElementById("lock-screen").style.display = "none";
-        document.getElementById("bg-music").play().catch(() => {});
-        if (typeof confetti === "function") {
-          confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#9b59b6', '#ff69b4', '#ffd700'] });
+            const percent = Math.max(8, Math.round((unlockedCount / gifts.length) * 100));
+            document.getElementById("progressBar").style.width = percent + "%";
         }
-      } else {
-        document.getElementById("error-msg").style.display = "block";
-      }
-    }
 
-    function toggleMusic() {
-      const music = document.getElementById("bg-music");
-      const btn = document.getElementById("music-btn");
-      if (music.paused) { music.play(); btn.innerText = "🎵"; }
-      else { music.pause(); btn.innerText = "🔇"; }
-    }
+        function openGiftModal(gift, isUnlocked) {
+            document.getElementById("modalIcon").innerText = isUnlocked ? gift.icon : "🔒";
+            document.getElementById("modalTitle").innerText = isUnlocked ? gift.title : "لسه ما جاء وقتها 🐼";
+            document.getElementById("modalText").innerText = isUnlocked ? gift.msg : `تفتح هذه الهدية في ${gift.label} إن شاء الله 💜✨`;
+            document.getElementById("giftModal").style.display = "flex";
+            if (isUnlocked) launchConfetti();
+        }
 
-    function openGift() {
-      document.getElementById("gift-modal").style.display = "flex";
-      if (typeof confetti === "function") confetti({ particleCount: 80, spread: 60 });
-    }
-    function closeGift() { document.getElementById("gift-modal").style.display = "none"; }
+        function closeModal() { document.getElementById("giftModal").style.display = "none"; }
 
-    function showComingSoon() {
-      const box = document.getElementById("coming-soon-box");
-      box.style.display = (box.style.display === "inline-block") ? "none" : "inline-block";
-    }
+        function enableDevMode() {
+            const pass = prompt("أدخل رمز المطورين لفتح كل الهدايا:");
+            if (pass === "632007" || pass === "362007") {
+                devMode = true;
+                renderMilestones();
+                launchConfetti();
+            } else if (pass !== null) {
+                alert("الرمز غير صحيح!");
+            }
+        }
 
-    function updateCounters() {
-      const now = new Date();
-      
-      // 1. عداد الوقت منذ 6 مارس 2007
-      const start = new Date("2007-03-06T00:00:00");
-      let years = now.getFullYear() - start.getFullYear();
-      let months = now.getMonth() - start.getMonth();
-      let days = now.getDate() - start.getDate();
-      if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
-      if (months < 0) { years--; months += 12; }
-      document.getElementById("life-counter").innerHTML = `
-        <div class="time-box"><span>${years}</span><small>سنة</small></div>
-        <div class="time-box"><span>${months}</span><small>شهر</small></div>
-        <div class="time-box"><span>${days}</span><small>يوم</small></div>
-        <div class="time-box"><span>${now.getHours()}</span><small>ساعة</small></div>
-        <div class="time-box"><span>${now.getSeconds()}</span><small>ثانية</small></div>
-      `;
+        function updateTimers() {
+            const now = new Date();
+            // 1. عداد عيد الميلاد القادم (6 مارس)
+            let nextBday = new Date(now.getFullYear(), 2, 6);
+            if (now > nextBday) nextBday.setFullYear(now.getFullYear() + 1);
+            const diffDays = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
+            document.getElementById("countdownText").innerText = `باقي ${diffDays} يوم على يومك المميز (6 مارس) 🎂💜`;
 
-      // 2. العد التنازلي لعيد الميلاد القادم (6 مارس)
-      let nextBday = new Date(now.getFullYear(), 2, 6);
-      if (now > nextBday) nextBday.setFullYear(now.getFullYear() + 1);
-      const diff = nextBday - now;
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / 1000 / 60) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-      document.getElementById("birthday-countdown").innerHTML = `
-        <div class="time-box"><span>${d}</span><small>يوم</small></div>
-        <div class="time-box"><span>${h}</span><small>ساعة</small></div>
-        <div class="time-box"><span>${m}</span><small>دقيقة</small></div>
-        <div class="time-box"><span>${s}</span><small>ثانية</small></div>
-      `;
-    }
-    setInterval(updateCounters, 1000);
-    updateCounters();
-  </script>
-  <!-- ==================== إضافة القلوب المتطايرة وزر العناق ==================== -->
-<div class="hug-section" dir="rtl">
-  <button class="hug-btn" onclick="sendPandaHug()">اضغطي هنا لأحلى حضن من الباندا 🐼💜</button>
-  <p id="hug-reply" class="hug-reply"></p>
-</div>
+            // 2. عداد العمر منذ 6 مارس 2007
+            const start = new Date("2007-03-06T00:00:00");
+            let years = now.getFullYear() - start.getFullYear();
+            let months = now.getMonth() - start.getMonth();
+            let days = now.getDate() - start.getDate();
+            if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+            if (months < 0) { years--; months += 12; }
+            document.getElementById("life-counter").innerHTML = `
+                <div class="life-item"><span>${years}</span><small>سنة</small></div>
+                <div class="life-item"><span>${months}</span><small>شهر</small></div>
+                <div class="life-item"><span>${days}</span><small>يوم</small></div>
+                <div class="life-item"><span>${now.getHours()}</span><small>ساعة</small></div>
+                <div class="life-item"><span>${now.getSeconds()}</span><small>ثانية</small></div>
+            `;
+        }
 
-<style>
-  .hug-section { text-align: center; margin: 20px 0 40px; position: relative; z-index: 10; }
-  .hug-btn {
-    background: linear-gradient(135deg, #6a1b9a, #ad1457); color: white;
-    border: 2px solid #f8bbd0; padding: 14px 28px; border-radius: 50px;
-    font-size: 1.1rem; font-weight: bold; cursor: pointer;
-    box-shadow: 0 6px 20px rgba(106, 27, 154, 0.35); transition: transform 0.2s;
-  }
-  .hug-btn:active { transform: scale(0.95); }
-  .hug-reply {
-    font-size: 1.15rem; font-weight: bold; color: #7b1fa2; margin-top: 12px;
-    min-height: 28px; transition: opacity 0.3s;
-  }
-  .floating-heart {
-    position: fixed; bottom: -20px; font-size: 1.8rem; pointer-events: none;
-    animation: floatUp 3s ease-out forwards; z-index: 99999;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0) scale(0.8); opacity: 1; }
-    100% { transform: translateY(-90vh) scale(1.4); opacity: 0; }
-  }
-</style>
+        function showComingSoon() {
+            const box = document.getElementById("coming-soon-box");
+            box.style.display = (box.style.display === "inline-block") ? "none" : "inline-block";
+            launchConfetti();
+        }
 
-<script>
-  const sweetMessages = [
-    "وصل الحضن بنجاح! أحبك قد الدنيا كلها 💜🐼",
-    "أنتِ أجمل شيء صار بحياتي ✨👑",
-    "يا بخت الدنيا فيكِ يا أميرتي 💜🌸",
-    "كل ضغطة تزيد حبي لكِ أضعاف 💗✨",
-    "ابتسمي، ضحكتك تسوى الكون كله 👑💜"
-  ];
+        // القصاصات الملونة المدمجة
+        const canvas = document.getElementById("confetti-canvas");
+        const ctx = canvas.getContext("2d");
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
 
-  function sendPandaHug() {
-    // إظهار رسالة عشوائية لطيفة
-    const msg = sweetMessages[Math.floor(Math.random() * sweetMessages.length)];
-    document.getElementById("hug-reply").innerText = msg;
+        function launchConfetti() {
+            const colors = ['#ff6b9d', '#ffd6e7', '#ffd700', '#e040fb', '#ffffff'];
+            for (let i = 0; i < 120; i++) {
+                particles.push({
+                    x: canvas.width / 2, y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 15, vy: (Math.random() - 0.7) * 16,
+                    size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)], alpha: 1
+                });
+            }
+        }
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, idx) => {
+                p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.alpha -= 0.012;
+                ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                if (p.alpha <= 0) particles.splice(idx, 1);
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+        animateConfetti();
 
-    // إطلاق 15 قلب متطاير في الشاشة
-    const hearts = ["💜", "🩷", "💖", "👑", "🐼"];
-    for (let i = 0; i < 15; i++) {
-      const heart = document.createElement("div");
-      heart.className = "floating-heart";
-      heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
-      heart.style.left = Math.random() * 90 + 5 + "vw";
-      heart.style.animationDuration = (Math.random() * 1.5 + 2) + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 3500);
-    }
-  }
-</script>
+        // الموسيقى المدمجة
+        let audioCtx = null;
+        function playBirthdayTune() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const notes = [
+                [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [349.2, 0.6], [329.6, 1.0],
+                [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [392.0, 0.6], [349.2, 1.0]
+            ];
+            let time = audioCtx.currentTime;
+            notes.forEach(([freq, dur]) => {
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(freq, time);
+                gain.gain.setValueAtTime(0.12, time); gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(time); osc.stop(time + dur);
+                time += dur + 0.05;
+            });
+        }
+        function toggleMusic() {
+            if (!audioCtx) { playBirthdayTune(); document.getElementById("music-btn").innerText = "🎵"; }
+            else if (audioCtx.state === 'running') { audioCtx.suspend(); document.getElementById("music-btn").innerText = "🔇"; }
+            else { audioCtx.resume(); document.getElementById("music-btn").innerText = "🎵"; }
+        }
 
+        function checkPass() {
+            const val = document.getElementById("pass-input").value.trim();
+            if (val === "632007" || val === "362007") {
+                document.getElementById("lock-screen").style.display = "none";
+                launchConfetti();
+                playBirthdayTune();
+            } else {
+                document.getElementById("error-msg").style.display = "block";
+            }
+        }
+
+        renderMilestones();
+        setInterval(updateTimers, 1000);
+        updateTimers();
+    </script>
 </body>
 </html>
