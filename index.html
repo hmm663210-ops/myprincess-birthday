@@ -1,362 +1,262 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Princess's Birthday &#128081;</title>
-    <link href="https://googleapis.com" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body {
-            background-color: #7c6ba8;
-            background-image: linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%), linear-gradient(rgba(255,255,255,.07) 50%, transparent 50%);
-            background-size: 35px 35px;
-            min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px; color: #fff; overflow-x: hidden; position: relative;
-        }
-        .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        .floating-heart { position: absolute; opacity: 0.25; animation: floatUp 8s infinite ease-in-out; user-select: none; }
-        @keyframes floatUp { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-18px) rotate(8deg); } }
-        .container {
-            position: relative; z-index: 1; width: 100%; max-width: 1050px; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.28); border-radius: 25px; padding: 30px 18px;
-            text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-        h1 { font-size: 1.9rem; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); direction: ltr; }
-        .subtitle { font-size: 1rem; color: #f3e8ff; margin-bottom: 6px; direction: ltr; }
-        .love-note { font-size: 1.15rem; font-weight: 900; color: #ffd6e7; margin-bottom: 45px; direction: ltr; text-shadow: 0 2px 8px rgba(255,107,157,0.4); }
-        .timeline-wrapper { position: relative; width: 100%; padding: 35px 0 15px 0; margin: 10px 0; }
-        .track-bg { position: relative; width: 100%; height: 12px; background: rgba(255, 255, 255, 0.25); border-radius: 10px; direction: ltr; }
-        .track-fill {
-            height: 100%; width: 5%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 50%, #ff6b9d 100%);
-            border-radius: 10px; transition: width 1.5s ease-in-out; position: relative; box-shadow: 0 0 15px rgba(255, 107, 157, 0.7);
-        }
-        .panda { position: absolute; right: -20px; top: -44px; font-size: 38px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); animation: bounce 2s infinite ease-in-out; user-select: none; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-        .milestones { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 25px; direction: ltr; gap: 10px; }
-        .milestone {
-            background: rgba(255, 255, 255, 0.16); border: 1.5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 18px; padding: 14px 8px; cursor: pointer; transition: all 0.2s ease; direction: rtl; position: relative;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .milestone:active { transform: scale(0.96); }
-        .milestone.unlocked { background: rgba(255, 107, 157, 0.38); border-color: #ff9ec2; box-shadow: 0 0 20px rgba(255, 107, 157, 0.4); animation: pulseGlow 2s infinite; }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 107, 157, 0.4); } 50% { box-shadow: 0 0 25px rgba(255, 107, 157, 0.8); } }
-        .gift-icon { font-size: 2rem; margin-bottom: 6px; display: block; }
-        .date-label { font-size: 0.82rem; font-weight: 700; color: #ffd6e7; display: block; }
-        .title-label { font-size: 0.92rem; font-weight: 700; margin-top: 3px; display: block; }
-        .status-badge { display: inline-block; margin-top: 8px; font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; background: rgba(0, 0, 0, 0.25); }
-        .unlocked .status-badge { background: #ff4d8d; color: #fff; font-weight: bold; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal-content { background: #fff; color: #4a3b6e; padding: 28px 22px; border-radius: 25px; max-width: 380px; width: 100%; text-align: center; position: relative; animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-icon { font-size: 3.2rem; margin-bottom: 12px; }
-        .modal-title { font-size: 1.35rem; font-weight: 900; margin-bottom: 10px; color: #7c6ba8; }
-        .modal-text { font-size: 0.98rem; line-height: 1.6; margin-bottom: 20px; color: #555; }
-        .btn { display: inline-block; background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4); width: 100%; }
-        .close-btn { background: #eee; color: #555; margin-top: 10px; box-shadow: none; }
-        .days-left-banner { margin-top: 25px; font-size: 0.92rem; background: rgba(255, 255, 255, 0.16); padding: 10px 18px; border-radius: 50px; display: inline-block; }
-        .dev-btn { position: fixed; top: 15px; left: 12px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); width: 32px; height: 32px; border-radius: 50%; font-size: 14px; cursor: pointer; z-index: 999; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .dev-btn:hover { opacity: 1; background: rgba(255,255,255,0.3); }
-        @media (max-width: 768px) {
-            .milestones { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            h1 { font-size: 1.45rem; }
-            .subtitle { font-size: 0.9rem; }
-            .container { padding: 25px 14px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Princess's Birthday 👑💜</title>
+  <link href="https://googleapis.com" rel="stylesheet">
+  <script src="https://jsdelivr.net"></script>
 </head>
 <body>
-    <div class="hearts-bg">
-        <span class="floating-heart" style="top: 8%; left: 10%; font-size: 24px;">&#128156;</span>
-        <span class="floating-heart" style="top: 15%; right: 12%; font-size: 28px; animation-delay: 1s;">&#129655;</span>
-        <span class="floating-heart" style="top: 45%; left: 6%; font-size: 22px; animation-delay: 2s;">&#128151;</span>
-        <span class="floating-heart" style="top: 55%; right: 8%; font-size: 26px; animation-delay: 3s;">&#128156;</span>
-        <span class="floating-heart" style="bottom: 12%; left: 15%; font-size: 30px; animation-delay: 1.5s;">&#129655;</span>
-        <span class="floating-heart" style="bottom: 18%; right: 14%; font-size: 22px; animation-delay: 2.5s;">&#128151;</span>
+
+  <!-- شاشة القفل (تقبل 362007 أو 632007) -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div class="lock-icon">👑💜</div>
+      <h2>منطقة خاصة للأميرة</h2>
+      <p>اكتبي كلمة السر لفتح المفاجأة ✨</p>
+      <input type="password" id="pass-input" placeholder="كلمة السر هنا..." onkeypress="if(event.key==='Enter') checkPass()">
+      <button onclick="checkPass()">فتح 🔑</button>
+      <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
     </div>
-
-    <button class="dev-btn" onclick="enableDevMode()" title="Developer Mode">&#128273;</button>
-
-    <div class="container">
-        <h1>My Princess's Birthday &#128081;&#128156;</h1>
-        <p class="subtitle">Every day brings the panda closer to your special day &#10024;</p>
-        <p class="love-note">I love you &#128156;</p>
-        <div class="timeline-wrapper">
-            <div class="track-bg">
-                <div class="track-fill" id="progressBar"><div class="panda">&#128060;</div></div>
-            </div>
-            <div class="milestones" id="milestonesContainer"></div>
-        </div>
-        <div class="days-left-banner" id="countdownText">&#1580;&#1575;&#1585;&#1610; &#1581;&#1587;&#1575;&#1576; &#1575;&#1604;&#1571;&#1610;&#1575;&#1605;...</div>
-    </div>
-
-    <div class="modal" id="giftModal">
-        <div class="modal-content">
-            <div class="modal-icon" id="modalIcon">&#127873;</div>
-            <h2 class="modal-title" id="modalTitle"></h2>
-            <p class="modal-text" id="modalText"></p>
-            <div id="modalAction"></div>
-            <button class="btn close-btn" onclick="closeModal()">&#1573;&#1594;&#1604;&#1575;&#1602;</button>
-        </div>
-    </div>
-
-    <script>
-        var isDevMode = false;
-        var startDate = new Date('2026-11-19T00:00:00');
-        var birthdayDate = new Date('2027-03-06T00:00:00');
-
-        var gifts = [
-            {
-                id: 1,
-                date: '2026-11-19',
-                dateDisplay: '19 \u0646\u0648\u0641\u0645\u0628\u0631',
-                title: '\u0628\u062f\u0627\u064a\u0629 \u0627\u0644\u0631\u062d\u0644\u0629 \ud83d\udc9c',
-                message: '\u0647\u0630\u0627 \u0627\u0644\u0645\u0648\u0642\u0639 \u0633\u0648\u064a\u062a\u0647 \u0644\u0643\u0650 \u0644\u0648\u062d\u062f\u0643.. \u0639\u0634\u0627\u0646 \u0643\u0644 \u064a\u0648\u0645 \u064a\u0645\u0631 \u064a\u0630\u0643\u0631\u0643 \u0642\u062f \u0625\u064a\u0634 \u0623\u0646\u0627 \u0645\u0647\u062a\u0645 \u0641\u064a\u0643\u0650 \u0648\u0623\u0646\u062a\u0638\u0631 \u064a\u0648\u0645 \u0645\u064a\u0644\u0627\u062f\u0643 \u0628\u0641\u0627\u0631\u063a \u0627\u0644\u0635\u0628\u0631.. I love you \ud83d\udc9c',
-                canvaLink: ''
-            },
-            {
-                id: 2,
-                date: '2026-11-25',
-                dateDisplay: '25 \u0646\u0648\u0641\u0645\u0628\u0631',
-                title: '\u0628\u062f\u0648\u0646 \u0645\u0646\u0627\u0633\u0628\u0629 \u2728',
-                message: '\u0645\u0631\u062a 6 \u0623\u064a\u0627\u0645 \u0648\u0627\u0644\u0628\u0627\u0646\u062f\u0627 \u064a\u0645\u0634\u064a \u0644\u0643.. \u0647\u0630\u0647 \u0645\u0641\u0627\u062c\u0623\u0629 \u0635\u063a\u064a\u0631\u0629 \u0628\u062f\u0648\u0646 \u0645\u0646\u0627\u0633\u0628\u0629 \u0639\u0634\u0627\u0646 \u0645\u0627 \u062a\u0645\u0644\u064a \u0645\u0646 \u0627\u0644\u0627\u0646\u062a\u0638\u0627\u0631!',
-                canvaLink: 'https://canva.com'
-            },
-            {
-                id: 3,
-                date: '2027-01-01',
-                dateDisplay: '1 \u064a\u0646\u0627\u064a\u0631',
-                title: '\u0647\u062f\u064a\u0629 \u0631\u0623\u0633 \u0627\u0644\u0633\u0646\u0629 \ud83c\udf86',
-                message: '\u0633\u0646\u0629 \u062c\u062f\u064a\u062f\u0629 \u0648\u0623\u0646\u062a\u0650 \u0623\u062c\u0645\u0644 \u0645\u0627 \u0641\u064a \u062d\u064a\u0627\u062a\u064a! \u0627\u0636\u063a\u0637\u064a \u0628\u0627\u0644\u0623\u0633\u0641\u0644 \u0644\u0641\u062a\u062d \u0628\u0637\u0627\u0642\u062a\u0643 \u0627\u0644\u062e\u0627\u0635\u0629.',
-                canvaLink: 'https://canva.com'
-            },
-            {
-                id: 4,
-                date: '2027-01-20',
-                dateDisplay: '20 \u064a\u0646\u0627\u064a\u0631',
-                title: '\u0647\u062f\u064a\u0629 \u0633\u0631\u064a\u0639\u0629 \u26a1',
-                message: '\u0642\u0631\u0628\u0646\u0627 \u0643\u062b\u064a\u0631! \u0647\u0630\u0647 \u0647\u062f\u064a\u0629 \u0633\u0631\u064a\u0639\u0629 \u062a\u0635\u0628\u0651\u0631\u0643 \u0644\u062d\u062f \u0639\u064a\u062f \u0627\u0644\u062d\u0628 \u2764\ufe0f',
-                canvaLink: 'https://canva.com'
-            },
-            {
-                id: 5,
-                date: '2027-02-14',
-                dateDisplay: '14 \u0641\u0628\u0631\u0627\u064a\u0631',
-                title: '\u0645\u0641\u0627\u062c\u0623\u0629 \u0639\u064a\u062f \u0627\u0644\u062d\u0628 \u2764\ufe0f',
-                message: '\u0635\u062d \u0628\u064a\u0646\u0646\u0627 \u0645\u0633\u0627\u0641\u0627\u062a \u0628\u0633 \u0642\u0644\u0628\u0643 \u0623\u0642\u0631\u0628 \u0634\u062e\u0635 \u0644\u0642\u0644\u0628\u064a.. \u0627\u0641\u062a\u062d\u064a \u0647\u062f\u064a\u062a\u0643 \u064a\u0627 \u0623\u0645\u064a\u0631\u0629!',
-                canvaLink: 'https://canva.com'
-            },
-            {
-                id: 6,
-                date: '2027-03-06',
-                dateDisplay: '6 \u0645\u0627\u0631\u0633',
-                title: '\u0639\u064a\u062f \u0645\u064a\u0644\u0627\u062f\u0643 \u0627\u0644\u0640 20 \ud83c\udf82',
-                message: '\u0643\u0644 \u0639\u0627\u0645 \u0648\u0623\u0646\u062a\u0650 \u0628\u0623\u0644\u0641 \u062e\u064a\u0631 \u064a\u0627 \u0623\u0645\u064a\u0631\u062a\u064a! \u0631\u0648\u062d\u064a \u0644\u0640 \u0644\u0627\u064a\u062a \u0644\u062a\u0627\u062e\u0630\u064a \u0647\u062f\u064a\u062a\u0643 \ud83c\udf81\u2728',
-                canvaLink: ''
-            }
-        ];
-        var now = new Date();
-        var totalDuration = birthdayDate - startDate;
-        var elapsed = now - startDate;
-        var percentage = (elapsed / totalDuration) * 100;
-        if (percentage < 5) percentage = 5;
-        if (percentage > 100) percentage = 100;
-
-        setTimeout(function() { document.getElementById('progressBar').style.width = percentage + '%'; }, 300);
-
-        var diffTime = birthdayDate - now;
-        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        var countdownEl = document.getElementById('countdownText');
-        if (diffDays > 0) {
-            countdownEl.innerHTML = '\u0645\u062a\u0628\u0642\u064a <strong>' + diffDays + '</strong> \u064a\u0648\u0645 \u0639\u0644\u0649 \u0639\u064a\u062f \u0645\u064a\u0644\u0627\u062f\u0643 \u0627\u0644\u0640 20 \ud83c\udf89';
-        } else {
-            countdownEl.innerHTML = '\ud83c\udf89 \u0627\u0644\u064a\u0648\u0645 \u0647\u0648 \u064a\u0648\u0645 \u0645\u064a\u0644\u0627\u062f\u0643! \u0643\u0644 \u0639\u0627\u0645 \u0648\u0623\u0646\u062a\u0650 \u0628\u062e\u064a\u0631 \ud83c\udf82';
-        }
-
-        function renderMilestones() {
-            var container = document.getElementById('milestonesContainer');
-            container.innerHTML = '';
-            gifts.forEach(function(gift) {
-                var giftDate = new Date(gift.date + 'T00:00:00');
-                var isUnlocked = isDevMode || (now >= giftDate);
-                var card = document.createElement('div');
-                card.className = 'milestone ' + (isUnlocked ? 'unlocked' : '');
-                card.innerHTML = 
-                    '<span class="gift-icon">' + (isUnlocked ? '\ud83c\udf81' : '\ud83d\udd12') + '</span>' +
-                    '<span class="date-label">' + gift.dateDisplay + '</span>' +
-                    '<span class="title-label">' + gift.title + '</span>' +
-                    '<span class="status-badge">' + (isUnlocked ? '\u0645\u0641\u062a\u0648\u062d\u0629 \u0627\u0644\u0622\u0646 \u2728' : '\u0645\u0642\u0641\u0648\u0644\u0629') + '</span>';
-                card.onclick = function() { openGiftModal(gift, isUnlocked, giftDate); };
-                container.appendChild(card);
-            });
-        }
-
-        renderMilestones();
-
-        function enableDevMode() {
-            var pass = prompt('\u0623\u062f\u062e\u0644 \u0631\u0645\u0632 \u0627\u0644\u0645\u0637\u0648\u0631 \u0644\u0641\u062a\u062d \u062c\u0645\u064a\u0639 \u0627\u0644\u0647\u062f\u0627\u064a\u0627 \u0644\u0644\u0645\u0639\u0627\u064a\u0646\u0629:');
-            if (pass === '2007') {
-                isDevMode = true;
-                renderMilestones();
-                alert('\u062a\u0645 \u062a\u0641\u0639\u064a\u0644 \u0648\u0636\u0639 \u0627\u0644\u0645\u0637\u0648\u0631! \u064a\u0645\u0643\u0646\u0643 \u0627\u0644\u0622\u0646 \u0645\u0639\u0627\u064a\u0646\u0629 \u062c\u0645\u064a\u0639 \u0627\u0644\u0647\u062f\u0627\u064a\u0627 \u2728');
-            } else if (pass !== null) {
-                alert('\u0627\u0644\u0631\u0645\u0632 \u063a\u064a\u0631 \u0635\u062d\u064a\u062d!');
-            }
-        }
-
-        function openGiftModal(gift, isUnlocked, giftDate) {
-            var modal = document.getElementById('giftModal');
-            var icon = document.getElementById('modalIcon');
-            var title = document.getElementById('modalTitle');
-            var text = document.getElementById('modalText');
-            var action = document.getElementById('modalAction');
-
-            if (isUnlocked) {
-                icon.innerText = '\ud83c\udf89';
-                title.innerText = gift.title;
-                text.innerText = gift.message;
-                action.innerHTML = (gift.canvaLink && gift.canvaLink !== '') ? '<a href="' + gift.canvaLink + '" target="_blank" class="btn">\u0627\u0641\u062a\u062d\u064a \u0627\u0644\u0647\u062f\u064a\u0629 \u0627\u0644\u0622\u0646 \ud83d\udc8c</a>' : '';
-            } else {
-                var daysToWait = Math.ceil((giftDate - now) / (1000 * 60 * 60 * 24));
-                icon.innerText = '\u23f3';
-                title.innerText = '\u0627\u0635\u0628\u0631\u064a \u0634\u0648\u064a\u0629 \u0645\u0632\u062a\u064a \u2764\ufe0f\ud83d\udc25';
-                text.innerText = '\u0647\u0630\u0647 \u0627\u0644\u0647\u062f\u064a\u0629 \u0645\u0642\u0641\u0648\u0644\u0629 \u062d\u0627\u0644\u064a\u0627\u064b\u060c \u0627\u0631\u062c\u0639\u064a \u0627\u0641\u062a\u062d\u064a\u0647\u0627 \u0628\u062a\u0627\u0631\u064a\u062e ' + gift.dateDisplay + ' (\u0645\u062a\u0628\u0642\u064a ' + daysToWait + ' \u064a\u0648\u0645).';
-                action.innerHTML = '';
-            }
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() { document.getElementById('giftModal').style.display = 'none'; }
-    </script>
-<!-- قسم بداية القصة -->
-<div class="story-section" dir="rtl">
-  <h2 class="story-title">بداية القصة : 💜</h2>
-  <p class="story-text">
-    بدأت القصة في <strong>6 مارس 2007</strong>، في ذلك اليوم المميز الذي أشرقت فيه الدنيا بميلاد أمز وأجمل شخص في الكون ✨<br>
-    ومنذ تلك اللحظة، صار للعالم لون مختلف وجمال لا يشبه أحداً، وكأن كل الأيام كانت تستعد لتحتفي بوجودك.<br>
-    كل عام وأنتِ أجمل حكاية بدأت، وأغلى ما في هذا الكون 💜👑
-  </p>
-</div>
-
-<style>
-  @import url('https://googleapis.com');
-
-  .story-section {
-    background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(255, 105, 180, 0.15));
-    border: 2px solid rgba(155, 89, 182, 0.4);
-    border-radius: 20px;
-    padding: 25px 20px;
-    margin: 30px auto;
-    max-width: 600px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(155, 89, 182, 0.15);
-    backdrop-filter: blur(8px);
-  }
-
-  .story-title {
-    font-family: 'Lalezar', 'Cairo', sans-serif;
-    font-size: 2rem;
-    color: #8e44ad;
-    margin-bottom: 15px;
-    text-shadow: 0 2px 10px rgba(142, 68, 173, 0.2);
-  }
-
-  .story-text {
-    font-family: 'Cairo', sans-serif;
-    font-size: 1.15rem;
-    line-height: 1.9;
-    color: #4a235a;
-    margin: 0;
-  }
-
-  .story-text strong {
-    color: #9b59b6;
-    font-weight: 700;
-  }
-</style>
-<!-- شاشة القفل (تظهر فوراً عند دخول الموقع) -->
-<div id="lock-screen" dir="rtl">
-  <div class="lock-box">
-    <div class="lock-icon">👑💜</div>
-    <h2>منطقة خاصة للأميرة</h2>
-    <p>اكتبي كلمة السر لفتح المفاجأة ✨</p>
-    <input type="password" id="pass-input" placeholder="كلمة السر هنا..." onkeypress="if(event.key==='Enter') checkPass()">
-    <button onclick="checkPass()">فتح 🔑</button>
-    <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
   </div>
-</div>
 
-<style>
-  #lock-screen {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: linear-gradient(135deg, #2c003e, #510a32, #801336);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999999;
-    font-family: 'Cairo', sans-serif;
-  }
-  .lock-box {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(15px);
-    padding: 35px 25px;
-    border-radius: 25px;
-    border: 2px solid rgba(255, 182, 193, 0.4);
-    text-align: center;
-    width: 85%;
-    max-width: 380px;
-    color: white;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-  }
-  .lock-icon { font-size: 3.5rem; margin-bottom: 10px; }
-  .lock-box h2 { margin: 0 0 10px; color: #ffb6c1; font-size: 1.6rem; }
-  .lock-box p { margin: 0 0 20px; font-size: 1rem; color: #f8e1f4; }
-  .lock-box input {
-    width: 85%;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    outline: none;
-    text-align: center;
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-  }
-  .lock-box button {
-    background: linear-gradient(45deg, #9b59b6, #ff69b4);
-    color: white;
-    border: none;
-    padding: 12px 35px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  .lock-box button:hover { transform: scale(1.05); }
-  #error-msg {
-    color: #ff6b81;
-    font-size: 0.95rem;
-    margin-top: 12px;
-    display: none;
-  }
-</style>
+  <!-- زر الموسيقى العائم -->
+  <button id="music-btn" onclick="toggleMusic()" title="تشغيل/إيقاف الموسيقى">🎵</button>
+  <audio id="bg-music" loop>
+    <source src="https://pixabay.com" type="audio/mpeg">
+  </audio>
 
-<script>
-  function checkPass() {
-    const secret = "362007"; 
-    const input = document.getElementById("pass-input").value;
+  <!-- المحتوى الرئيسي للموقع -->
+  <div class="main-container">
+    <div class="hearts-bar">💜 🩷 💗 💜 🩷 💗</div>
+    <h1 class="main-title" dir="ltr">My Princess's Birthday 👑💜</h1>
+    <p class="sub-text" dir="ltr">Every day brings the panda closer to your special day ✨</p>
+    <p class="love-text" dir="ltr">I love you 💜</p>
     
-    if (input === secret) {
-      document.getElementById("lock-screen").style.display = "none";
-    } else {
-      document.getElementById("error-msg").style.display = "block";
-    }
-  }
-</script>
+    <div class="panda-bounce">🐼</div>
 
+    <!-- عداد الأيام المتبقية لـ 6 مارس -->
+    <div class="purple-card">
+      <h3 class="card-subtitle">العد التنازلي ليومك المميز (6 مارس) 🎂✨</h3>
+      <div id="birthday-countdown" class="counter-grid">جاري حساب الأيام...</div>
+    </div>
+
+    <!-- صندوق الهدية -->
+    <div class="gift-section">
+      <button class="gift-btn" onclick="openGift()">🎁</button>
+      <p class="gift-hint">اضغطي على الهدية لفتحها ✨</p>
+    </div>
+
+    <!-- نافذة الهدية المنبثقة -->
+    <div id="gift-modal" class="modal">
+      <div class="modal-content">
+        <h3>كل عام وأنتِ بألف خير يا أميرتي 👑💜</h3>
+        <p>أتمنى لكِ سنة مليانة سعادة وضحكة ما تفارق وجهك، وكل أيامك تكون حلوة مثلك يا أجمل إنسانة في حياتي 🐼✨</p>
+        <button class="close-btn" onclick="closeGift()">إغلاق</button>
+      </div>
+    </div>
+    <!-- قسم بداية القصة -->
+    <div class="purple-card">
+      <h2 class="card-title">بداية القصة : 💜</h2>
+      <p class="card-text">
+        بدأت القصة في <strong>6 مارس 2007</strong>، في ذلك اليوم المميز الذي أشرقت فيه الدنيا بميلاد أمز وأجمل شخص في الكون ✨<br>
+        ومنذ تلك اللحظة، صار للعالم لون مختلف وجمال لا يشبه أحداً، وكأن كل الأيام كانت تستعد لتحتفي بوجودك.<br>
+        كل عام وأنتِ أجمل حكاية بدأت، وأغلى ما في هذا الكون 💜👑
+      </p>
+    </div>
+
+    <!-- عداد الوقت منذ 6 مارس 2007 -->
+    <div class="purple-card">
+      <h3 class="card-subtitle">مضى على بداية هذه القصة الجميلة ⏳✨</h3>
+      <div id="life-counter" class="counter-grid">جاري حساب اللحظات...</div>
+    </div>
+
+    <!-- زر كل ما اشتقتي لي -->
+    <div class="miss-you-wrapper">
+      <button class="miss-you-btn" onclick="showComingSoon()">
+        اضغطي هنا كل ما اشتقتي لي 💌
+      </button>
+      <div id="coming-soon-box" class="coming-soon-msg" dir="ltr">
+        Coming Soon... 💜✨
+      </div>
+    </div>
+  </div>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 20px 15px;
+      background: linear-gradient(135deg, #f3e5f5, #fce4ec, #ede7f6);
+      min-height: 100vh; font-family: 'Cairo', sans-serif; color: #4a235a;
+      text-align: center;
+    }
+    .main-container { max-width: 600px; margin: 0 auto; }
+    .hearts-bar { font-size: 1.5rem; margin-bottom: 10px; letter-spacing: 5px; }
+    .main-title { font-family: 'Poppins', sans-serif; font-size: 2rem; color: #7b1fa2; margin: 10px 0; }
+    .sub-text { font-family: 'Poppins', sans-serif; font-size: 1.05rem; color: #6a1b9a; margin: 5px 0; }
+    .love-text { font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: bold; color: #ad1457; margin: 10px 0; }
+    
+    .panda-bounce { font-size: 4rem; margin: 15px 0; animation: bounce 2s infinite; display: inline-block; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+    .purple-card {
+      background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(10px);
+      border: 2px solid rgba(155, 89, 182, 0.35); border-radius: 22px;
+      padding: 22px 18px; margin: 22px 0;
+      box-shadow: 0 8px 25px rgba(155, 89, 182, 0.15);
+    }
+    .card-title { font-family: 'Lalezar', 'Cairo', sans-serif; font-size: 2rem; color: #8e44ad; margin: 0 0 12px; }
+    .card-subtitle { font-size: 1.25rem; color: #8e44ad; margin: 0 0 15px; font-weight: 700; }
+    .card-text { font-size: 1.1rem; line-height: 1.9; color: #4a235a; margin: 0; }
+    .card-text strong { color: #9b59b6; }
+
+    .counter-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .time-box {
+      background: #f8eafc; border: 1px solid #d2b4de; border-radius: 12px;
+      padding: 10px 14px; min-width: 65px;
+    }
+    .time-box span { display: block; font-size: 1.35rem; font-weight: bold; color: #8e44ad; }
+    .time-box small { font-size: 0.85rem; color: #5b2c6f; }
+
+    /* الهدية */
+    .gift-section { margin: 25px 0; }
+    .gift-btn {
+      font-size: 4.5rem; background: none; border: none; cursor: pointer;
+      transition: transform 0.3s; animation: pulse 1.8s infinite;
+    }
+    .gift-btn:hover { transform: scale(1.15); }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .gift-hint { font-size: 0.95rem; color: #8e44ad; margin-top: 5px; font-weight: bold; }
+
+    /* نافذة الهدية */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9998;
+    }
+    .modal-content {
+      background: white; padding: 30px 25px; border-radius: 22px; max-width: 400px; width: 85%;
+      border: 3px solid #9b59b6; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .modal-content h3 { color: #8e44ad; margin-top: 0; }
+    .modal-content p { line-height: 1.8; font-size: 1.1rem; }
+    .close-btn {
+      background: #8e44ad; color: white; border: none; padding: 10px 25px;
+      border-radius: 12px; font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer;
+    }
+
+    /* زر الاشتياق */
+    .miss-you-wrapper { margin: 25px 0 50px; }
+    .miss-you-btn {
+      background: linear-gradient(45deg, #8e44ad, #ff69b4); color: white;
+      border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.15rem;
+      font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(142, 68, 173, 0.35); transition: transform 0.2s;
+    }
+    .miss-you-btn:hover { transform: scale(1.05); }
+    .coming-soon-msg {
+      display: none; margin-top: 15px; font-family: 'Poppins', sans-serif;
+      font-size: 1.4rem; font-weight: 700; color: #8e44ad;
+      background: rgba(255, 255, 255, 0.9); padding: 12px 28px;
+      border-radius: 15px; border: 2px dashed #9b59b6;
+    }
+
+    /* القفل والموسيقى */
+    #lock-screen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #2c003e, #510a32, #801336);
+      display: flex; justify-content: center; align-items: center; z-index: 999999;
+    }
+    .lock-box {
+      background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(15px);
+      padding: 35px 25px; border-radius: 25px; border: 2px solid rgba(255, 182, 193, 0.4);
+      width: 85%; max-width: 380px; color: white;
+    }
+    .lock-icon { font-size: 3.5rem; margin-bottom: 10px; }
+    .lock-box h2 { margin: 0 0 10px; color: #ffb6c1; }
+    .lock-box p { margin: 0 0 20px; color: #f8e1f4; }
+    .lock-box input {
+      width: 85%; padding: 12px; border-radius: 12px; border: none;
+      text-align: center; font-size: 1.1rem; margin-bottom: 15px;
+    }
+    .lock-box button {
+      background: linear-gradient(45deg, #9b59b6, #ff69b4); color: white;
+      border: none; padding: 12px 35px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+    }
+    #error-msg { color: #ff6b81; font-size: 0.95rem; margin-top: 12px; display: none; }
+    #music-btn {
+      position: fixed; bottom: 20px; left: 20px; width: 50px; height: 50px;
+      border-radius: 50%; background: linear-gradient(45deg, #8e44ad, #ff69b4);
+      color: white; border: 2px solid white; font-size: 1.4rem; cursor: pointer; z-index: 9999;
+    }
+  </style>
+
+  <script>
+    function checkPass() {
+      const val = document.getElementById("pass-input").value;
+      if (val === "362007" || val === "632007") {
+        document.getElementById("lock-screen").style.display = "none";
+        document.getElementById("bg-music").play().catch(() => {});
+        if (typeof confetti === "function") {
+          confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#9b59b6', '#ff69b4', '#ffd700'] });
+        }
+      } else {
+        document.getElementById("error-msg").style.display = "block";
+      }
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById("bg-music");
+      const btn = document.getElementById("music-btn");
+      if (music.paused) { music.play(); btn.innerText = "🎵"; }
+      else { music.pause(); btn.innerText = "🔇"; }
+    }
+
+    function openGift() {
+      document.getElementById("gift-modal").style.display = "flex";
+      if (typeof confetti === "function") confetti({ particleCount: 80, spread: 60 });
+    }
+    function closeGift() { document.getElementById("gift-modal").style.display = "none"; }
+
+    function showComingSoon() {
+      const box = document.getElementById("coming-soon-box");
+      box.style.display = (box.style.display === "inline-block") ? "none" : "inline-block";
+    }
+
+    function updateCounters() {
+      const now = new Date();
+      
+      // 1. عداد الوقت منذ 6 مارس 2007
+      const start = new Date("2007-03-06T00:00:00");
+      let years = now.getFullYear() - start.getFullYear();
+      let months = now.getMonth() - start.getMonth();
+      let days = now.getDate() - start.getDate();
+      if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+      if (months < 0) { years--; months += 12; }
+      document.getElementById("life-counter").innerHTML = `
+        <div class="time-box"><span>${years}</span><small>سنة</small></div>
+        <div class="time-box"><span>${months}</span><small>شهر</small></div>
+        <div class="time-box"><span>${days}</span><small>يوم</small></div>
+        <div class="time-box"><span>${now.getHours()}</span><small>ساعة</small></div>
+        <div class="time-box"><span>${now.getSeconds()}</span><small>ثانية</small></div>
+      `;
+
+      // 2. العد التنازلي لعيد الميلاد القادم (6 مارس)
+      let nextBday = new Date(now.getFullYear(), 2, 6);
+      if (now > nextBday) nextBday.setFullYear(now.getFullYear() + 1);
+      const diff = nextBday - now;
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / 1000 / 60) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      document.getElementById("birthday-countdown").innerHTML = `
+        <div class="time-box"><span>${d}</span><small>يوم</small></div>
+        <div class="time-box"><span>${h}</span><small>ساعة</small></div>
+        <div class="time-box"><span>${m}</span><small>دقيقة</small></div>
+        <div class="time-box"><span>${s}</span><small>ثانية</small></div>
+      `;
+    }
+    setInterval(updateCounters, 1000);
+    updateCounters();
+  </script>
 </body>
 </html>
