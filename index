@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Princess's Birthday 👑💜</title>
+  <link href="https://googleapis.com" rel="stylesheet">
+  <script src="https://jsdelivr.net"></script>
+</head>
+<body>
+
+  <!-- شاشة القفل بكلمة السر 362007 -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div class="lock-icon">👑💜</div>
+      <h2>منطقة خاصة للأميرة</h2>
+      <p>اكتبي كلمة السر لفتح المفاجأة ✨</p>
+      <input type="password" id="pass-input" placeholder="كلمة السر هنا..." onkeypress="if(event.key==='Enter') checkPass()">
+      <button onclick="checkPass()">فتح 🔑</button>
+      <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
+    </div>
+  </div>
+
+  <!-- زر الموسيقى العائم -->
+  <button id="music-btn" onclick="toggleMusic()" title="تشغيل/إيقاف الموسيقى">🎵</button>
+  <audio id="bg-music" loop>
+    <source src="https://pixabay.com" type="audio/mpeg">
+  </audio>
+
+  <!-- المحتوى الأصلي للموقع -->
+  <div class="main-container">
+    <div class="hearts-bar">💜 🩷 💗 💜 🩷 💗</div>
+    <h1 class="main-title" dir="ltr">My Princess's Birthday 👑💜</h1>
+    <p class="sub-text" dir="ltr">Every day brings the panda closer to your special day ✨</p>
+    <p class="love-text" dir="ltr">I love you 💜</p>
+    
+    <div class="panda-bounce">🐼</div>
+
+    <!-- عداد الأيام المتبقية لـ 6 مارس -->
+    <div class="purple-card">
+      <h3 class="card-subtitle">العد التنازلي ليومك المميز (6 مارس) 🎂✨</h3>
+      <div id="birthday-countdown" class="counter-grid">جاري حساب الأيام...</div>
+    </div>
+
+    <!-- صندوق الهدية -->
+    <div class="gift-section">
+      <button class="gift-btn" onclick="openGift()">🎁</button>
+      <p class="gift-hint">اضغطي على الهدية لفتحها ✨</p>
+    </div>
+
+    <!-- نافذة الهدية المنبثقة -->
+    <div id="gift-modal" class="modal">
+      <div class="modal-content">
+        <h3>كل عام وأنتِ بألف خير يا أميرتي 👑💜</h3>
+        <p>أتمنى لكِ سنة مليانة سعادة وضحكة ما تفارق وجهك، وكل أيامك تكون حلوة مثلك يا أجمل إنسانة في حياتي 🐼✨</p>
+        <button class="close-btn" onclick="closeGift()">إغلاق</button>
+      </div>
+    </div>
+    <!-- قسم بداية القصة -->
+    <div class="purple-card">
+      <h2 class="card-title">بداية القصة : 💜</h2>
+      <p class="card-text">
+        بدأت القصة في <strong>6 مارس 2007</strong>، في ذلك اليوم المميز الذي أشرقت فيه الدنيا بميلاد أمز وأجمل شخص في الكون ✨<br>
+        ومنذ تلك اللحظة، صار للعالم لون مختلف وجمال لا يشبه أحداً، وكأن كل الأيام كانت تستعد لتحتفي بوجودك.<br>
+        كل عام وأنتِ أجمل حكاية بدأت، وأغلى ما في هذا الكون 💜👑
+      </p>
+    </div>
+
+    <!-- عداد الوقت منذ 6 مارس 2007 -->
+    <div class="purple-card">
+      <h3 class="card-subtitle">مضى على بداية هذه القصة الجميلة ⏳✨</h3>
+      <div id="life-counter" class="counter-grid">جاري حساب اللحظات...</div>
+    </div>
+
+    <!-- زر كل ما اشتقتي لي -->
+    <div class="miss-you-wrapper">
+      <button class="miss-you-btn" onclick="showComingSoon()">
+        اضغطي هنا كل ما اشتقتي لي 💌
+      </button>
+      <div id="coming-soon-box" class="coming-soon-msg" dir="ltr">
+        Coming Soon... 💜✨
+      </div>
+    </div>
+  </div>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 20px 15px;
+      background: linear-gradient(135deg, #f3e5f5, #fce4ec, #ede7f6);
+      min-height: 100vh; font-family: 'Cairo', sans-serif; color: #4a235a;
+      text-align: center;
+    }
+    .main-container { max-width: 600px; margin: 0 auto; }
+    .hearts-bar { font-size: 1.5rem; margin-bottom: 10px; letter-spacing: 5px; }
+    .main-title { font-family: 'Poppins', sans-serif; font-size: 2rem; color: #7b1fa2; margin: 10px 0; }
+    .sub-text { font-family: 'Poppins', sans-serif; font-size: 1.05rem; color: #6a1b9a; margin: 5px 0; }
+    .love-text { font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: bold; color: #ad1457; margin: 10px 0; }
+    
+    .panda-bounce { font-size: 4rem; margin: 15px 0; animation: bounce 2s infinite; display: inline-block; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+    .purple-card {
+      background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(10px);
+      border: 2px solid rgba(155, 89, 182, 0.35); border-radius: 22px;
+      padding: 22px 18px; margin: 22px 0;
+      box-shadow: 0 8px 25px rgba(155, 89, 182, 0.15);
+    }
+    .card-title { font-family: 'Lalezar', 'Cairo', sans-serif; font-size: 2rem; color: #8e44ad; margin: 0 0 12px; }
+    .card-subtitle { font-size: 1.25rem; color: #8e44ad; margin: 0 0 15px; font-weight: 700; }
+    .card-text { font-size: 1.1rem; line-height: 1.9; color: #4a235a; margin: 0; }
+    .card-text strong { color: #9b59b6; }
+
+    .counter-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .time-box {
+      background: #f8eafc; border: 1px solid #d2b4de; border-radius: 12px;
+      padding: 10px 14px; min-width: 65px;
+    }
+    .time-box span { display: block; font-size: 1.35rem; font-weight: bold; color: #8e44ad; }
+    .time-box small { font-size: 0.85rem; color: #5b2c6f; }
+
+    /* الهدية */
+    .gift-section { margin: 25px 0; }
+    .gift-btn {
+      font-size: 4.5rem; background: none; border: none; cursor: pointer;
+      transition: transform 0.3s; animation: pulse 1.8s infinite;
+    }
+    .gift-btn:hover { transform: scale(1.15); }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .gift-hint { font-size: 0.95rem; color: #8e44ad; margin-top: 5px; font-weight: bold; }
+
+    /* نافذة الهدية */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9998;
+    }
+    .modal-content {
+      background: white; padding: 30px 25px; border-radius: 22px; max-width: 400px; width: 85%;
+      border: 3px solid #9b59b6; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .modal-content h3 { color: #8e44ad; margin-top: 0; }
+    .modal-content p { line-height: 1.8; font-size: 1.1rem; }
+    .close-btn {
+      background: #8e44ad; color: white; border: none; padding: 10px 25px;
+      border-radius: 12px; font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer;
+    }
+
+    /* زر الاشتياق */
+    .miss-you-wrapper { margin: 25px 0 50px; }
+    .miss-you-btn {
+      background: linear-gradient(45deg, #8e44ad, #ff69b4); color: white;
+      border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.15rem;
+      font-family: 'Cairo', sans-serif; font-weight: bold; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(142, 68, 173, 0.35); transition: transform 0.2s;
+    }
+    .miss-you-btn:hover { transform: scale(1.05); }
+    .coming-soon-msg {
+      display: none; margin-top: 15px; font-family: 'Poppins', sans-serif;
+      font-size: 1.4rem; font-weight: 700; color: #8e44ad;
+      background: rgba(255, 255, 255, 0.9); padding: 12px 28px;
+      border-radius: 15px; border: 2px dashed #9b59b6;
+    }
+
+    /* القفل والموسيقى */
+    #lock-screen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #2c003e, #510a32, #801336);
+      display: flex; justify-content: center; align-items: center; z-index: 999999;
+    }
+    .lock-box {
+      background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(15px);
+      padding: 35px 25px; border-radius: 25px; border: 2px solid rgba(255, 182, 193, 0.4);
+      width: 85%; max-width: 380px; color: white;
+    }
+    .lock-icon { font-size: 3.5rem; margin-bottom: 10px; }
+    .lock-box h2 { margin: 0 0 10px; color: #ffb6c1; }
+    .lock-box p { margin: 0 0 20px; color: #f8e1f4; }
+    .lock-box input {
+      width: 85%; padding: 12px; border-radius: 12px; border: none;
+      text-align: center; font-size: 1.1rem; margin-bottom: 15px;
+    }
+    .lock-box button {
+      background: linear-gradient(45deg, #9b59b6, #ff69b4); color: white;
+      border: none; padding: 12px 35px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+    }
+    #error-msg { color: #ff6b81; font-size: 0.95rem; margin-top: 12px; display: none; }
+    #music-btn {
+      position: fixed; bottom: 20px; left: 20px; width: 50px; height: 50px;
+      border-radius: 50%; background: linear-gradient(45deg, #8e44ad, #ff69b4);
+      color: white; border: 2px solid white; font-size: 1.4rem; cursor: pointer; z-index: 9999;
+    }
+  </style>
+
+  <script>
+    function checkPass() {
+      if (document.getElementById("pass-input").value === "362007") {
+        document.getElementById("lock-screen").style.display = "none";
+        document.getElementById("bg-music").play().catch(() => {});
+        if (typeof confetti === "function") {
+          confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#9b59b6', '#ff69b4', '#ffd700'] });
+        }
+      } else {
+        document.getElementById("error-msg").style.display = "block";
+      }
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById("bg-music");
+      const btn = document.getElementById("music-btn");
+      if (music.paused) { music.play(); btn.innerText = "🎵"; }
+      else { music.pause(); btn.innerText = "🔇"; }
+    }
+
+    function openGift() {
+      document.getElementById("gift-modal").style.display = "flex";
+      if (typeof confetti === "function") confetti({ particleCount: 80, spread: 60 });
+    }
+    function closeGift() { document.getElementById("gift-modal").style.display = "none"; }
+
+    function showComingSoon() {
+      const box = document.getElementById("coming-soon-box");
+      box.style.display = (box.style.display === "inline-block") ? "none" : "inline-block";
+    }
+
+    function updateCounters() {
+      const now = new Date();
+      
+      // 1. عداد الوقت منذ 6 مارس 2007
+      const start = new Date("2007-03-06T00:00:00");
+      let years = now.getFullYear() - start.getFullYear();
+      let months = now.getMonth() - start.getMonth();
+      let days = now.getDate() - start.getDate();
+      if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+      if (months < 0) { years--; months += 12; }
+      document.getElementById("life-counter").innerHTML = `
+        <div class="time-box"><span>${years}</span><small>سنة</small></div>
+        <div class="time-box"><span>${months}</span><small>شهر</small></div>
+        <div class="time-box"><span>${days}</span><small>يوم</small></div>
+        <div class="time-box"><span>${now.getHours()}</span><small>ساعة</small></div>
+        <div class="time-box"><span>${now.getSeconds()}</span><small>ثانية</small></div>
+      `;
+
+      // 2. العد التنازلي لعيد الميلاد القادم (6 مارس)
+      let nextBday = new Date(now.getFullYear(), 2, 6); // شهر 2 في البرمجة هو مارس
+      if (now > nextBday) nextBday.setFullYear(now.getFullYear() + 1);
+      const diff = nextBday - now;
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / 1000 / 60) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      document.getElementById("birthday-countdown").innerHTML = `
+        <div class="time-box"><span>${d}</span><small>يوم</small></div>
+        <div class="time-box"><span>${h}</span><small>ساعة</small></div>
+        <div class="time-box"><span>${m}</span><small>دقيقة</small></div>
+        <div class="time-box"><span>${s}</span><small>ثانية</small></div>
+      `;
+    }
+    setInterval(updateCounters, 1000);
+    updateCounters();
+  </script>
+</body>
+</html>
