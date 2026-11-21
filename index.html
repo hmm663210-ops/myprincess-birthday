@@ -1,354 +1,445 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Princess's Birthday 👑</title>
-    <link href="https://googleapis.com" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body {
-            background-color: #7c6ba8;
-            background-image: linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%), linear-gradient(rgba(255,255,255,.07) 50%, transparent 50%);
-            background-size: 35px 35px;
-            min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px; color: #fff; overflow-x: hidden; position: relative;
-        }
-        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99998; }
-        .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        .floating-heart { position: absolute; opacity: 0.25; animation: floatUp 8s infinite ease-in-out; user-select: none; }
-        @keyframes floatUp { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-18px) rotate(8deg); } }
-        .container {
-            position: relative; z-index: 1; width: 100%; max-width: 1050px; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.28); border-radius: 25px; padding: 30px 18px;
-            text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); margin: 15px 0;
-        }
-        h1 { font-size: 1.9rem; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); direction: ltr; }
-        .subtitle { font-size: 1rem; color: #f3e8ff; margin-bottom: 6px; direction: ltr; }
-        .love-note { font-size: 1.15rem; font-weight: 900; color: #ffd6e7; margin-bottom: 45px; direction: ltr; text-shadow: 0 2px 8px rgba(255,107,157,0.4); }
-        .timeline-wrapper { position: relative; width: 100%; padding: 35px 0 15px 0; margin: 10px 0; }
-        .track-bg { position: relative; width: 100%; height: 12px; background: rgba(255, 255, 255, 0.25); border-radius: 10px; direction: ltr; }
-        .track-fill {
-            height: 100%; width: 5%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 50%, #ff6b9d 100%);
-            border-radius: 10px; transition: width 1.5s ease-in-out; position: relative; box-shadow: 0 0 15px rgba(255, 107, 157, 0.7);
-        }
-        .panda { position: absolute; right: -20px; top: -44px; font-size: 38px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); animation: bounce 2s infinite ease-in-out; user-select: none; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-        .milestones { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 25px; direction: ltr; gap: 10px; }
-        .milestone {
-            background: rgba(255, 255, 255, 0.16); border: 1.5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 18px; padding: 14px 8px; cursor: pointer; transition: all 0.2s ease; direction: rtl; position: relative;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .milestone:active { transform: scale(0.96); }
-        .milestone.unlocked { background: rgba(255, 107, 157, 0.38); border-color: #ff9ec2; box-shadow: 0 0 20px rgba(255, 107, 157, 0.4); animation: pulseGlow 2s infinite; }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 107, 157, 0.4); } 50% { box-shadow: 0 0 25px rgba(255, 107, 157, 0.8); } }
-        .gift-icon { font-size: 2rem; margin-bottom: 6px; display: block; }
-        .date-label { font-size: 0.82rem; font-weight: 700; color: #ffd6e7; display: block; }
-        .title-label { font-size: 0.92rem; font-weight: 700; margin-top: 3px; display: block; }
-        .status-badge { display: inline-block; margin-top: 8px; font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; background: rgba(0, 0, 0, 0.25); }
-        .unlocked .status-badge { background: #ff4d8d; color: #fff; font-weight: bold; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal-content { background: #fff; color: #4a3b6e; padding: 28px 22px; border-radius: 25px; max-width: 380px; width: 100%; text-align: center; position: relative; animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-icon { font-size: 3.2rem; margin-bottom: 12px; }
-        .modal-title { font-size: 1.35rem; font-weight: 900; margin-bottom: 10px; color: #7c6ba8; }
-        .modal-text { font-size: 0.98rem; line-height: 1.6; margin-bottom: 20px; color: #555; }
-        .btn { display: inline-block; background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4); width: 100%; }
-        .close-btn { background: #eee; color: #555; margin-top: 10px; box-shadow: none; }
-        .days-left-banner { margin-top: 25px; font-size: 0.92rem; background: rgba(255, 255, 255, 0.16); padding: 10px 18px; border-radius: 50px; display: inline-block; }
-        .dev-btn { position: fixed; top: 15px; left: 12px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); width: 32px; height: 32px; border-radius: 50%; font-size: 14px; cursor: pointer; z-index: 999; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .dev-btn:hover { opacity: 1; background: rgba(255,255,255,0.3); }
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Princess's Birthday 👑</title>
+  <link href="https://googleapis.com" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+    body {
+      background-color: #7c6ba8;
+      background-image: linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%), linear-gradient(rgba(255,255,255,.07) 50%, transparent 50%);
+      background-size: 35px 35px;
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 15px; color: #fff; overflow-x: hidden; position: relative;
+    }
 
-        /* تنسيق الإضافات الجديدة بنفس روح التصميم */
-        .story-box { margin-top: 30px; background: rgba(255, 255, 255, 0.16); border: 1.5px solid rgba(255, 255, 255, 0.32); border-radius: 20px; padding: 22px 18px; }
-        .story-title { font-family: 'Lalezar', 'Cairo', sans-serif; font-size: 1.85rem; color: #ffd6e7; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .story-text { font-size: 1.05rem; line-height: 1.9; color: #fff; }
-        .story-text strong { color: #ffd6e7; font-weight: 900; }
-        .life-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-        .life-item { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 14px; padding: 8px 14px; min-width: 65px; }
-        .life-item span { display: block; font-size: 1.3rem; font-weight: 900; color: #ffd6e7; }
-        .life-item small { font-size: 0.8rem; color: #f3e8ff; }
-        .miss-btn { margin-top: 22px; background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: #fff; border: none; padding: 13px 28px; border-radius: 50px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.45); transition: transform 0.2s; }
-        .miss-btn:hover { transform: scale(1.05); }
-        .coming-soon { display: none; margin-top: 12px; font-family: 'Poppins', sans-serif; font-size: 1.3rem; font-weight: 600; color: #ffd6e7; background: rgba(0,0,0,0.22); padding: 10px 24px; border-radius: 15px; border: 1.5px dashed #ffd6e7; }
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99998; }
 
-        /* شاشة القفل والموسيقى */
-        #lock-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #4b3869, #7c6ba8, #5e4b8b); display: flex; justify-content: center; align-items: center; z-index: 999999; padding: 20px; }
-        .lock-box { background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(15px); padding: 35px 25px; border-radius: 25px; border: 2px solid rgba(255, 255, 255, 0.3); width: 100%; max-width: 370px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.25); }
-        .lock-box input { width: 85%; padding: 12px; border-radius: 50px; border: none; outline: none; text-align: center; font-size: 1.1rem; margin: 15px 0; }
-        .lock-box button { background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: white; border: none; padding: 12px 35px; border-radius: 50px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4); }
-        #error-msg { color: #ffd6e7; font-size: 0.9rem; margin-top: 12px; display: none; font-weight: bold; }
-        #music-btn { position: fixed; bottom: 18px; left: 18px; width: 46px; height: 46px; border-radius: 50%; background: rgba(255, 107, 157, 0.85); color: white; border: 2px solid rgba(255,255,255,0.6); font-size: 1.3rem; cursor: pointer; z-index: 999; }
+    .hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+    .floating-heart { position: absolute; opacity: 0.25; animation: floatUp 8s infinite ease-in-out; user-select: none; }
+    @keyframes floatUp { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-18px) rotate(8deg); } }
 
-        @media (max-width: 768px) {
-            .milestones { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            h1 { font-size: 1.45rem; }
-            .subtitle { font-size: 0.9rem; }
-            .container { padding: 25px 14px; }
-        }
-    </style>
+    .container {
+      position: relative; z-index: 1; width: 100%; max-width: 1050px; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.28); border-radius: 25px; padding: 30px 18px;
+      text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); margin: 15px 0;
+    }
+
+    h1 { font-size: 1.9rem; margin-bottom: 6px; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); direction: ltr; }
+    .subtitle { font-size: 1rem; color: #f3e8ff; margin-bottom: 6px; direction: ltr; }
+    .love-note { font-size: 1.15rem; font-weight: 900; color: #ffd6e7; margin-bottom: 45px; direction: ltr; text-shadow: 0 2px 8px rgba(255, 107, 157, 0.4); }
+
+    .timeline-wrapper { position: relative; width: 100%; padding: 35px 0 15px 0; margin: 10px 0; }
+    .track-bg { position: relative; width: 100%; height: 12px; background: rgba(255, 255, 255, 0.25); border-radius: 10px; direction: ltr; }
+    .track-fill {
+      height: 100%; width: 5%; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 50%, #ff6b9d 100%);
+      border-radius: 10px; transition: width 1.5s ease-in-out; position: relative; box-shadow: 0 0 15px rgba(255, 107, 157, 0.7);
+    }
+    .panda { position: absolute; right: -20px; top: -44px; font-size: 38px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); animation: bounce 2s infinite ease-in-out; user-select: none; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+    .milestones { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 25px; direction: ltr; gap: 10px; }
+    .milestone {
+      background: rgba(255, 255, 255, 0.16); border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 18px; padding: 14px 8px; cursor: pointer; transition: all 0.2s ease; direction: rtl; position: relative;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .milestone:active { transform: scale(0.96); }
+    .milestone.unlocked { background: rgba(255, 107, 157, 0.38); border-color: #ff9ec2; box-shadow: 0 0 20px rgba(255, 107, 157, 0.4); animation: pulseGlow 2s infinite; }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(255, 107, 157, 0.4); } 50% { box-shadow: 0 0 25px rgba(255, 107, 157, 0.8); } }
+
+    .gift-icon { font-size: 2rem; margin-bottom: 6px; display: block; }
+    .date-label { font-size: 0.82rem; font-weight: 700; color: #ffd6e7; display: block; }
+    .title-label { font-size: 0.92rem; font-weight: 700; margin-top: 3px; display: block; }
+    .status-badge { display: inline-block; margin-top: 8px; font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; background: rgba(0, 0, 0, 0.25); }
+    .unlocked .status-badge { background: #ff4d8d; color: #fff; font-weight: bold; }
+
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-content { background: #fff; color: #4a3b6e; padding: 28px 22px; border-radius: 25px; max-width: 380px; width: 100%; text-align: center; position: relative; animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-icon { font-size: 3.2rem; margin-bottom: 12px; }
+    .modal-title { font-size: 1.35rem; font-weight: 900; margin-bottom: 10px; color: #7c6ba8; }
+    .modal-text { font-size: 0.98rem; line-height: 1.6; margin-bottom: 20px; color: #555; }
+    .btn { display: inline-block; background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; font-size: 1rem; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4); width: 100%; }
+    .close-btn { background: #eee; color: #555; margin-top: 10px; box-shadow: none; }
+    .days-left-banner { margin-top: 25px; font-size: 0.92rem; background: rgba(255, 255, 255, 0.16); padding: 10px 18px; border-radius: 50px; display: inline-block; }
+
+    .dev-btn { position: fixed; top: 15px; left: 12px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.2); color: rgba(255, 255, 255, 0.5); width: 32px; height: 32px; border-radius: 50%; font-size: 14px; cursor: pointer; z-index: 999; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+    .dev-btn:hover { opacity: 1; background: rgba(255, 255, 255, 0.3); }
+
+    /* تنسيق الإضافات */
+    .story-box { margin-top: 30px; background: rgba(255, 255, 255, 0.16); border: 1.5px solid rgba(255, 255, 255, 0.32); border-radius: 20px; padding: 22px 18px; }
+    .story-title { font-family: 'Lalezar', 'Cairo', sans-serif; font-size: 1.85rem; color: #ffd6e7; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .story-text { font-size: 1.05rem; line-height: 1.9; color: #fff; }
+    .story-text strong { color: #ffd6e7; font-weight: 900; }
+
+    .life-grid { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .life-item { background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 14px; padding: 8px 12px; min-width: 60px; }
+    .life-item span { display: block; font-size: 1.25rem; font-weight: 900; color: #ffd6e7; }
+    .life-item small { font-size: 0.8rem; color: #f3e8ff; }
+
+    .miss-btn { margin-top: 22px; background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: #fff; border: none; padding: 13px 28px; border-radius: 50px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.45); transition: transform 0.2s; }
+    .miss-btn:hover { transform: scale(1.05); }
+
+    .trends-btn {
+      display: inline-block;
+      margin-top: 14px;
+      background: linear-gradient(45deg, #9d50bb, #6e48aa);
+      color: #fff;
+      text-decoration: none;
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      padding: 13px 28px;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(110, 72, 170, 0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .trends-btn:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(157, 80, 187, 0.6); }
+
+    .miss-msg-box {
+      display: none;
+      margin-top: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffd6e7;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 14px 24px;
+      border-radius: 18px;
+      border: 1.5px dashed #ffd6e7;
+      max-width: 90%;
+      line-height: 1.6;
+      animation: popIn 0.3s ease;
+    }
+
+    .light-signature {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #ffd6e7;
+      direction: ltr;
+      text-shadow: 0 2px 10px rgba(255, 107, 157, 0.5);
+      letter-spacing: 0.4px;
+    }
+
+    /* شاشة القفل والموسيقى */
+    #lock-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #4b3869, #7c6ba8, #5e4b8b); display: flex; justify-content: center; align-items: center; z-index: 999999; padding: 20px; }
+    .lock-box { background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(15px); padding: 35px 25px; border-radius: 25px; border: 2px solid rgba(255, 255, 255, 0.3); width: 100%; max-width: 370px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.25); }
+    .lock-box input { width: 85%; padding: 12px; border-radius: 50px; border: none; outline: none; text-align: center; font-size: 1.1rem; margin: 15px 0; }
+    .lock-box button { background: linear-gradient(45deg, #ff6b9d, #ff8eb3); color: white; border: none; padding: 12px 35px; border-radius: 50px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4); }
+    #error-msg { color: #ffd6e7; font-size: 0.9rem; margin-top: 12px; display: none; font-weight: bold; }
+
+    #music-btn { position: fixed; bottom: 18px; left: 18px; width: 46px; height: 46px; border-radius: 50%; background: rgba(255, 107, 157, 0.85); color: white; border: 2px solid rgba(255,255,255,0.6); font-size: 1.3rem; cursor: pointer; z-index: 999; }
+
+    @media (max-width: 768px) {
+      .milestones { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      h1 { font-size: 1.45rem; }
+      .subtitle { font-size: 0.9rem; }
+      .container { padding: 25px 14px; }
+    }
+  </style>
 </head>
 <body>
-    <canvas id="confetti-canvas"></canvas>
 
-    <!-- شاشة القفل (تقبل 632007 أو 362007) -->
-    <div id="lock-screen">
-        <div class="lock-box">
-            <div style="font-size: 3.5rem; margin-bottom: 8px;">👑💜</div>
-            <h2 style="color: #ffd6e7; margin-bottom: 6px;">منطقة خاصة للأميرة</h2>
-            <p style="font-size: 0.95rem; color: #f3e8ff;">اكتبي كلمة السر لفتح المفاجأة ✨</p>
-            <input type="password" id="pass-input" placeholder="كلمة السر هنا..." onkeypress="if(event.key==='Enter') checkPass()">
-            <br>
-            <button onclick="checkPass()">فتح 🔑</button>
-            <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
-        </div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- شاشة القفل (تقبل 632007 أو 362007) -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div style="font-size: 3.5rem; margin-bottom: 8px;">🐼🚫</div>
+      <h2 style="color: #ffd6e7; margin-bottom: 6px;">ممنوع الدخول لغير مزتي 🐼🚫</h2>
+      <p style="font-size: 0.95rem; color: #f3e8ff;">حطي الباسوورد عشان تفتح المفاجأة 💜✨</p>
+      <input type="password" id="pass-input" placeholder="كلمة السر هنا..." onkeypress="if(event.key==='Enter') checkPass()">
+      <br>
+      <button onclick="checkPass()">فتح 🔑</button>
+      <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
+    </div>
+  </div>
+
+  <div class="hearts-bg">
+    <span class="floating-heart" style="top: 8%; left: 10%; font-size: 24px;">💜</span>
+    <span class="floating-heart" style="top: 15%; right: 12%; font-size: 28px; animation-delay: 1s;">🩷</span>
+    <span class="floating-heart" style="top: 45%; left: 6%; font-size: 22px; animation-delay: 2s;">💗</span>
+    <span class="floating-heart" style="top: 55%; right: 8%; font-size: 26px; animation-delay: 3s;">💜</span>
+    <span class="floating-heart" style="bottom: 12%; left: 15%; font-size: 30px; animation-delay: 1.5s;">🩷</span>
+    <span class="floating-heart" style="bottom: 18%; right: 14%; font-size: 22px; animation-delay: 2.5s;">💗</span>
+  </div>
+
+  <button class="dev-btn" onclick="enableDevMode()" title="Developer Mode">🔑</button>
+  <button id="music-btn" onclick="toggleMusic()" title="تشغيل/إيقاف الموسيقى">🎵</button>
+
+  <div class="container">
+    <h1>My Princess's Birthday 👑💜</h1>
+    <p class="subtitle">Every day brings the panda closer to your special day ✨</p>
+    <p class="love-note">I love you 💜</p>
+
+    <div class="timeline-wrapper">
+      <div class="track-bg">
+        <div class="track-fill" id="progressBar"><div class="panda">🐼</div></div>
+      </div>
+      <div class="milestones" id="milestonesContainer"></div>
     </div>
 
-    <div class="hearts-bg">
-        <span class="floating-heart" style="top: 8%; left: 10%; font-size: 24px;">💜</span>
-        <span class="floating-heart" style="top: 15%; right: 12%; font-size: 28px; animation-delay: 1s;">🩷</span>
-        <span class="floating-heart" style="top: 45%; left: 6%; font-size: 22px; animation-delay: 2s;">💗</span>
-        <span class="floating-heart" style="top: 55%; right: 8%; font-size: 26px; animation-delay: 3s;">💜</span>
-        <span class="floating-heart" style="bottom: 12%; left: 15%; font-size: 30px; animation-delay: 1.5s;">🩷</span>
-        <span class="floating-heart" style="bottom: 18%; right: 14%; font-size: 22px; animation-delay: 2.5s;">💗</span>
+    <div class="days-left-banner" id="countdownText">جاري حساب الأيام...</div>
+
+    <div class="story-box">
+      <h2 class="story-title">بداية القصة : 💜</h2>
+      <p class="story-text">
+        في <strong>6 مارس 2007</strong>، انولد أجمل وأحلى وأمزّ إنسان عرفته عيني ✨<br>
+        يوم واحد كان كفيل يغيّر شكل العالم ويخلق لي أجمل سبب أبتسم عشانه كل يوم..<br>
+        أنتِ مو بس بداية قصة، أنتِ أجمل شي صار بحياتي 🐼💜
+      </p>
     </div>
 
-    <button class="dev-btn" onclick="enableDevMode()" title="Developer Mode">🔑</button>
-    <button id="music-btn" onclick="toggleMusic()" title="تشغيل/إيقاف الموسيقى">🎵</button>
-
-    <div class="container">
-        <h1>My Princess's Birthday 👑💜</h1>
-        <p class="subtitle">Every day brings the panda closer to your special day ✨</p>
-        <p class="love-note">I love you 💜</p>
-        <div class="timeline-wrapper">
-            <div class="track-bg">
-                <div class="track-fill" id="progressBar"><div class="panda">🐼</div></div>
-            </div>
-            <div class="milestones" id="milestonesContainer"></div>
-        </div>
-        <div class="days-left-banner" id="countdownText">جاري حساب الأيام...</div>
-
-        <!-- قسم بداية القصة (تحت الهدايا مباشرة) -->
-        <div class="story-box">
-            <h2 class="story-title">بداية القصة : 💜</h2>
-            <p class="story-text">
-                بدأت القصة في <strong>6 مارس 2007</strong>، في ذلك اليوم المميز الذي أشرقت فيه الدنيا بميلاد أمز وأجمل شخص في الكون ✨<br>
-                ومنذ تلك اللحظة، صار للعالم لون مختلف وجمال لا يشبه أحداً، وكأن كل الأيام كانت تستعد لتحتفي بوجودك.<br>
-                كل عام وأنتِ أجمل حكاية بدأت، وأغلى ما في هذا الكون 💜👑
-            </p>
-        </div>
-
-        <!-- عداد الوقت منذ 6 مارس 2007 -->
-        <div class="story-box">
-            <h3 style="color: #ffd6e7; font-size: 1.15rem;">مضى على بداية هذه القصة الجميلة ⏳✨</h3>
-            <div id="life-counter" class="life-grid"></div>
-        </div>
-
-        <!-- زر كل ما اشتقتي لي -->
-        <div>
-            <button class="miss-btn" onclick="showComingSoon()">اضغطي هنا كل ما اشتقتي لي 💌</button>
-            <br>
-            <div id="coming-soon-box" class="coming-soon" dir="ltr">Coming Soon... 💜✨</div>
-        </div>
+    <div class="story-box">
+      <h3 style="color: #ffd6e7; font-size: 1.15rem;">مضى على بداية هذه القصة الجميلة ⏳✨</h3>
+      <div id="life-counter" class="life-grid"></div>
     </div>
 
-    <div class="modal" id="giftModal">
-        <div class="modal-content">
-            <div class="modal-icon" id="modalIcon">🎁</div>
-            <h2 class="modal-title" id="modalTitle"></h2>
-            <p class="modal-text" id="modalText"></p>
-            <div id="modalAction"></div>
-            <button class="btn close-btn" onclick="closeModal()">إغلاق</button>
-        </div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <button class="miss-btn" onclick="showRandomLoveNote()">اضغطي هنا كل ما اشتقتي لي 💌</button>
+      <div id="miss-msg-box" class="miss-msg-box"></div>
+
+      <a href="https://github.io" target="_blank" class="trends-btn">تطقيماتنا وترنداتنا 🐼✨</a>
     </div>
-        <script>
-        let devMode = false;
-        const gifts = [
-            { date: "2026-11-19", label: "اليوم الأول", title: "بداية المفاجآت ✨", icon: "🎁", msg: "أول هدية لكِ يا أميرتي، كل يوم يقربنا أكثر ليومك المميز 💜" },
-            { date: "2026-12-15", label: "15 ديسمبر", title: "رسالة حب 💌", icon: "💝", msg: "أنتِ أجمل نعمة في حياتي، وجودك يخلي كل أيامي أحلى 🐼🩷" },
-            { date: "2027-01-01", label: "1 يناير", title: "سنة جديدة معك 🎆", icon: "✨", msg: "سنة جديدة تبدأ وأنتِ أميرتي وأغلى ما أملك في هذا الكون 👑💜" },
-            { date: "2027-02-14", label: "14 فبراير", title: "يوم الحب 💗", icon: "💖", msg: "كل يوم معك هو عيد، أحبك قد السماء والنجوم 💜✨" },
-            { date: "2027-03-01", label: "1 مارس", title: "العد التنازلي ⏳", icon: "🎀", msg: "باقي أيام قليلة على أجمل يوم في السنة.. يوم ميلادك 👑🎂" },
-            { date: "2027-03-06", label: "6 مارس", title: "يوم الأميرة 👑", icon: "🎂", msg: "كل عام وأنتِ بألف خير يا أمز وأجمل شخص في الكون! عيد ميلاد سعيد أميرتي 💜👑🐼" }
-        ];
 
-        function renderMilestones() {
-            const container = document.getElementById("milestonesContainer");
-            container.innerHTML = "";
-            const today = new Date();
-            let unlockedCount = 0;
+    <p class="light-signature">Don't forget, Light will love you forever, to the moon and back 🌙👑💜</p>
+  </div>
 
-            gifts.forEach((g) => {
-                const gDate = new Date(g.date);
-                const isUnlocked = devMode || today >= gDate;
-                if (isUnlocked) unlockedCount++;
+  <div class="modal" id="giftModal">
+    <div class="modal-content">
+      <div class="modal-icon" id="modalIcon">🎁</div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <p class="modal-text" id="modalText"></p>
+      <div id="modalAction"></div>
+      <button class="btn close-btn" onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+  <script>
+    let devMode = false;
 
-                const div = document.createElement("div");
-                div.className = "milestone" + (isUnlocked ? " unlocked" : "");
-                div.innerHTML = `
-                    <span class="gift-icon">${isUnlocked ? g.icon : "🔒"}</span>
-                    <span class="date-label">${g.label}</span>
-                    <span class="title-label">${g.title}</span>
-                    <span class="status-badge">${isUnlocked ? "مفتوحة ✨" : "مقفلة"}</span>
-                `;
-                div.onclick = () => openGiftModal(g, isUnlocked);
-                container.appendChild(div);
-            });
+    const gifts = [
+      { date: "2026-11-28", label: "28 نوفمبر", title: "هدية حلوة زيك ✨🐼", icon: "🎁", msg: "أول هدية لكِ يا أميرتي، كل يوم يقربنا أكثر ليومك المميز 💜" },
+      { date: "2026-12-15", label: "15 ديسمبر", title: "ممموواححح 💋💜", icon: "💝", msg: "أنتِ أجمل نعمة في حياتي، وجودك يخلي كل أيامي أحلى 🐼🩷" },
+      { date: "2027-01-01", label: "1 يناير", title: "سنة جديدة معك 🎆💜", icon: "✨", msg: "سنة جديدة تبدأ وأنتِ أميرتي وأغلى ما أملك في هذا الكون 👑💜" },
+      { date: "2027-02-14", label: "14 فبراير", title: "أول عيد حب لنا 💗🧸", icon: "💖", msg: "كل يوم معك هو عيد، أحبك قد السماء والنجوم 💜✨" },
+      { date: "2027-03-01", label: "1 مارس", title: "قربتت..! 🎀✨", icon: "🎀", msg: "باقي أيام قليلة على أجمل يوم في السنة.. يوم ميلادك 👑🎂" },
+      { date: "2027-03-06", label: "6 مارس", title: "ميلاد أحلى شخص فالكون 👑🎂", icon: "🎂", msg: "كل عام وأنتِ بألف خير يا أمز وأجمل شخص في الكون! عيد ميلاد سعيد أميرتي 💜👑🐼" }
+    ];
 
-            const percent = Math.max(8, Math.round((unlockedCount / gifts.length) * 100));
-            document.getElementById("progressBar").style.width = percent + "%";
-        }
+    const loveNotes = [
+      "أنا دايماً معك وبقلبك، حتى لو مو جنبك الحين 💜🐼",
+      "تذكري إن في شخص يحبك قد الدنيا وما فيها ✨👑",
+      "لو تدرين قد إيش أشتاق لك أنا أكثر 💌🩷",
+      "ابتسمي الحين، ابتسامتك هي أحلى شي بهالكون 🌸💜",
+      "أنتِ أجمل صدفة وأغلى إنسانة بحياتي كلها 🧸✨",
+      "كل ما اشتقتي لي، افتحي هالمكان وتذكري إني لك وحدك 💜🔒",
+      "وجودك بحياتي هو اللي مخلي كل أيامي حلوة 🐼💖",
+      "أحبك أكثر من أمس، وأقل من بكرة يا أميرتي 👑💜",
+      "غمضي عيونك ثانية.. اعتبريها حضن كبير مني لك 🤗✨",
+      "ما في شي بالدنيا يساوي لحظة وحدة معك 💗🌟"
+    ];
 
-        function openGiftModal(gift, isUnlocked) {
-            document.getElementById("modalIcon").innerText = isUnlocked ? gift.icon : "🔒";
-            document.getElementById("modalTitle").innerText = isUnlocked ? gift.title : "لسه ما جاء وقتها 🐼";
-            document.getElementById("modalText").innerText = isUnlocked ? gift.msg : `تفتح هذه الهدية في ${gift.label} إن شاء الله 💜✨`;
-            document.getElementById("giftModal").style.display = "flex";
-            if (isUnlocked) launchConfetti();
-        }
+    function showRandomLoveNote() {
+      const box = document.getElementById("miss-msg-box");
+      const randomMsg = loveNotes[Math.floor(Math.random() * loveNotes.length)];
+      box.innerText = randomMsg;
+      box.style.display = "block";
+      launchConfetti();
+    }
 
-        function closeModal() { document.getElementById("giftModal").style.display = "none"; }
+    function renderMilestones() {
+      const container = document.getElementById("milestonesContainer");
+      container.innerHTML = "";
+      const today = new Date();
+      let unlockedCount = 0;
 
-        function enableDevMode() {
-            const pass = prompt("أدخل رمز المطورين لفتح كل الهدايا:");
-            if (pass === "632007" || pass === "362007") {
-                devMode = true;
-                renderMilestones();
-                launchConfetti();
-            } else if (pass !== null) {
-                alert("الرمز غير صحيح!");
-            }
-        }
+      gifts.forEach((g) => {
+        const gDate = new Date(g.date);
+        const isUnlocked = devMode || today >= gDate;
+        if (isUnlocked) unlockedCount++;
 
-        function updateTimers() {
-            const now = new Date();
-            let nextBday = new Date(now.getFullYear(), 2, 6);
-            if (now > nextBday) nextBday.setFullYear(now.getFullYear() + 1);
-            const diffDays = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
-            document.getElementById("countdownText").innerText = `باقي ${diffDays} يوم على يومك المميز (6 مارس) 🎂💜`;
+        const div = document.createElement("div");
+        div.className = "milestone" + (isUnlocked ? " unlocked" : "");
+        div.innerHTML = `
+          <span class="gift-icon">${isUnlocked ? g.icon : "🔒"}</span>
+          <span class="date-label">${g.label}</span>
+          <span class="title-label">${g.title}</span>
+          <span class="status-badge">${isUnlocked ? "مفتوحة ✨" : "مقفلة"}</span>
+        `;
+        div.onclick = () => openGiftModal(g, isUnlocked);
+        container.appendChild(div);
+      });
 
-            const start = new Date("2007-03-06T00:00:00");
-            let years = now.getFullYear() - start.getFullYear();
-            let months = now.getMonth() - start.getMonth();
-            let days = now.getDate() - start.getDate();
-            if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
-            if (months < 0) { years--; months += 12; }
-            document.getElementById("life-counter").innerHTML = `
-                <div class="life-item"><span>${years}</span><small>سنة</small></div>
-                <div class="life-item"><span>${months}</span><small>شهر</small></div>
-                <div class="life-item"><span>${days}</span><small>يوم</small></div>
-                <div class="life-item"><span>${now.getHours()}</span><small>ساعة</small></div>
-                <div class="life-item"><span>${now.getSeconds()}</span><small>ثانية</small></div>
-            `;
-        }
+      const percent = Math.max(8, Math.round((unlockedCount / gifts.length) * 100));
+      document.getElementById("progressBar").style.width = percent + "%";
+    }
 
-        function showComingSoon() {
-            const box = document.getElementById("coming-soon-box");
-            box.style.display = (box.style.display === "inline-block") ? "none" : "inline-block";
-            launchConfetti();
-        }
+    function openGiftModal(gift, isUnlocked) {
+      document.getElementById("modalIcon").innerText = isUnlocked ? gift.icon : "🔒";
+      
+      if (isUnlocked) {
+        document.getElementById("modalTitle").innerText = gift.title;
+        document.getElementById("modalText").innerText = gift.msg;
+        launchConfetti();
+      } else {
+        const now = new Date();
+        const targetDate = new Date(gift.date);
+        const diffTime = targetDate - now;
+        const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // القصاصات الملونة المدمجة
-        const canvas = document.getElementById("confetti-canvas");
-        const ctx = canvas.getContext("2d");
-        let particles = [];
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
+        document.getElementById("modalTitle").innerText = "لسه اصبري شويه مزتي : 💜✨";
+        document.getElementById("modalText").innerText = `باقي ${daysLeft} يوم على هذه المناسبة (${gift.label}) 🐼`;
+      }
 
-        function launchConfetti() {
-            const colors = ['#ff6b9d', '#ffd6e7', '#ffd700', '#e040fb', '#ffffff'];
-            for (let i = 0; i < 120; i++) {
-                particles.push({
-                    x: canvas.width / 2, y: canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 15, vy: (Math.random() - 0.7) * 16,
-                    size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)], alpha: 1
-                });
-            }
-        }
-        function animateConfetti() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, idx) => {
-                p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.alpha -= 0.012;
-                ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.color;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-                if (p.alpha <= 0) particles.splice(idx, 1);
-            });
-            requestAnimationFrame(animateConfetti);
-        }
-        animateConfetti();
+      document.getElementById("giftModal").style.display = "flex";
+    }
 
-        // الموسيقى المدمجة الكاملة مع التكرار
-        let audioCtx = null;
-        let musicLoop = null;
-        let isMusicOn = false;
+    function closeModal() { document.getElementById("giftModal").style.display = "none"; }
 
-        function playFullBirthdayMelody() {
-            if (!isMusicOn) return;
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            const notes = [
-                [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [349.2, 0.6], [329.6, 1.0],
-                [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [392.0, 0.6], [349.2, 1.0],
-                [261.6, 0.3], [261.6, 0.3], [523.2, 0.6], [440.0, 0.6], [349.2, 0.6], [329.6, 0.6], [293.6, 1.0],
-                [466.1, 0.3], [466.1, 0.3], [440.0, 0.6], [349.2, 0.6], [392.0, 0.6], [349.2, 1.2]
-            ];
-
-            let time = audioCtx.currentTime;
-            notes.forEach(([freq, dur]) => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, time);
-                gain.gain.setValueAtTime(0.14, time);
-                gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(time);
-                osc.stop(time + dur);
-                time += dur + 0.06;
-            });
-
-            clearTimeout(musicLoop);
-            musicLoop = setTimeout(() => {
-                if (isMusicOn) playFullBirthdayMelody();
-            }, 15500);
-        }
-
-        function playBirthdayTune() {
-            isMusicOn = true;
-            document.getElementById("music-btn").innerText = "🎵";
-            playFullBirthdayMelody();
-        }
-
-        function toggleMusic() {
-            if (!isMusicOn) {
-                playBirthdayTune();
-            } else {
-                isMusicOn = false;
-                clearTimeout(musicLoop);
-                if (audioCtx) audioCtx.suspend();
-                document.getElementById("music-btn").innerText = "🔇";
-            }
-        }
-
-        function checkPass() {
-            const val = document.getElementById("pass-input").value.trim();
-            if (val === "632007" || val === "362007") {
-                document.getElementById("lock-screen").style.display = "none";
-                launchConfetti();
-                playBirthdayTune();
-            } else {
-                document.getElementById("error-msg").style.display = "block";
-            }
-        }
-
+    function enableDevMode() {
+      const pass = prompt("أدخل رمز المطورين لفتح كل الهدايا:");
+      if (pass === "632007" || pass === "362007") {
+        devMode = true;
         renderMilestones();
-        setInterval(updateTimers, 1000);
-        updateTimers();
-    </script>
+        launchConfetti();
+      } else if (pass !== null) {
+        alert("الرمز غير صحيح!");
+      }
+    }
+
+    function updateTimers() {
+      const now = new Date();
+      let nextBday = new Date(now.getFullYear(), 2, 6);
+      if (now > nextBday) nextBday.setFullYear(now.getFullYear() + 1);
+      const diffDays = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
+      document.getElementById("countdownText").innerText = `باقي ${diffDays} يوم على يومك المميز (6 مارس) 🎂💜`;
+
+      const start = new Date("2007-03-06T00:00:00");
+      let years = now.getFullYear() - start.getFullYear();
+      let months = now.getMonth() - start.getMonth();
+      let days = now.getDate() - start.getDate();
+
+      if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+      if (months < 0) { years--; months += 12; }
+
+      document.getElementById("life-counter").innerHTML = `
+        <div class="life-item"><span>${years}</span><small>سنة</small></div>
+        <div class="life-item"><span>${months}</span><small>شهر</small></div>
+        <div class="life-item"><span>${days}</span><small>يوم</small></div>
+        <div class="life-item"><span>${now.getHours()}</span><small>ساعة</small></div>
+        <div class="life-item"><span>${now.getMinutes()}</span><small>دقيقة</small></div>
+        <div class="life-item"><span>${now.getSeconds()}</span><small>ثانية</small></div>
+      `;
+    }
+
+    // القصاصات الملونة المدمجة
+    const canvas = document.getElementById("confetti-canvas");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function launchConfetti() {
+      const colors = ['#ff6b9d', '#ffd6e7', '#ffd700', '#e040fb', '#ffffff'];
+      for (let i = 0; i < 120; i++) {
+        particles.push({
+          x: canvas.width / 2, y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 15, vy: (Math.random() - 0.7) * 16,
+          size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)], alpha: 1
+        });
+      }
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, idx) => {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.alpha -= 0.012;
+        ctx.globalAlpha = Math.max(0, p.alpha); ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        if (p.alpha <= 0) particles.splice(idx, 1);
+      });
+      requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+
+    // الموسيقى المدمجة الكاملة مع التكرار
+    let audioCtx = null;
+    let musicLoop = null;
+    let isMusicOn = false;
+
+    function playFullBirthdayMelody() {
+      if (!isMusicOn) return;
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const notes = [
+        [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [349.2, 0.6], [329.6, 1.0],
+        [261.6, 0.3], [261.6, 0.3], [293.6, 0.6], [261.6, 0.6], [392.0, 0.6], [349.2, 1.0],
+        [261.6, 0.3], [261.6, 0.3], [523.2, 0.6], [440.0, 0.6], [349.2, 0.6], [329.6, 0.6], [293.6, 1.0],
+        [466.1, 0.3], [466.1, 0.3], [440.0, 0.6], [349.2, 0.6], [392.0, 0.6], [349.2, 1.2]
+      ];
+
+      let time = audioCtx.currentTime;
+      notes.forEach(([freq, dur]) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, time);
+        gain.gain.setValueAtTime(0.14, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(time);
+        osc.stop(time + dur);
+        time += dur + 0.06;
+      });
+
+      clearTimeout(musicLoop);
+      musicLoop = setTimeout(() => {
+        if (isMusicOn) playFullBirthdayMelody();
+      }, 15500);
+    }
+
+    function playBirthdayTune() {
+      isMusicOn = true;
+      document.getElementById("music-btn").innerText = "🎵";
+      playFullBirthdayMelody();
+    }
+
+    function toggleMusic() {
+      if (!isMusicOn) {
+        playBirthdayTune();
+      } else {
+        isMusicOn = false;
+        clearTimeout(musicLoop);
+        if (audioCtx) audioCtx.suspend();
+        document.getElementById("music-btn").innerText = "🔇";
+      }
+    }
+
+    function checkPass() {
+      const val = document.getElementById("pass-input").value.trim();
+      if (val === "632007" || val === "362007") {
+        document.getElementById("lock-screen").style.display = "none";
+        launchConfetti();
+        playBirthdayTune();
+      } else {
+        document.getElementById("error-msg").style.display = "block";
+      }
+    }
+
+    renderMilestones();
+    setInterval(updateTimers, 1000);
+    updateTimers();
+  </script>
 </body>
 </html>
