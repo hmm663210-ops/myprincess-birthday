@@ -160,6 +160,7 @@
       <br>
       <button onclick="checkPass()">فتح 🔑</button>
       <p id="error-msg">كلمة السر غلط، جربي مرة ثانية 🐼💔</p>
+      <p onclick="alert('تلميح: تاريخ ميلاد امز بشري فالكون 💜👑..!')" style="font-size: 0.85rem; color: #f3e8ff; margin-top: 14px; cursor: pointer; text-decoration: underline;">هل نسيتي كلمة السر؟ 🐼🔑</p>
     </div>
   </div>
 
@@ -205,10 +206,21 @@
 
     <div style="display: flex; flex-direction: column; align-items: center;">
       <button class="miss-btn" onclick="showRandomLoveNote()">اضغطي هنا كل ما اشتقتي لي 💌</button>
-      <div id="miss-msg-box" class="miss-msg-box"></div>
-
-      <a href="https://github.io" target="_blank" class="trends-btn">تطقيماتنا وترنداتنا 🐼✨</a>
-    </div>
+     <div id="miss-msg-box" class="miss-msg-box"></div>
+<button class="miss-btn" style="background: linear-gradient(45deg, #a18cd1, #fbc2eb); margin-top: 12px;" onclick="showLoveReason()">أسباب حبي لكِ 💜✨ (<span id="reason-count">0</span>/19)</button>
+<div id="reason-msg-box" class="miss-msg-box"></div>
+<div class="story-box" style="margin-top: 20px; width: 100%;">
+  <h3 style="color: #ffd6e7; font-size: 1.1rem; margin-bottom: 12px;">كيف مزاجك اليوم يروحي؟ 🐼💜</h3>
+  <div style="display: flex; justify-content: center; gap: 14px; font-size: 1.8rem;">
+    <span style="cursor: pointer;" onclick="showMood('happy')">🥰</span>
+    <span style="cursor: pointer;" onclick="showMood('miss')">🥹</span>
+    <span style="cursor: pointer;" onclick="showMood('sad')">💔</span>
+    <span style="cursor: pointer;" onclick="showMood('tired')">😴</span>
+    <span style="cursor: pointer;" onclick="showMood('angry')">😤</span>
+  </div>
+  <div id="mood-msg-box" class="miss-msg-box" style="margin: 14px auto 0 auto;"></div>
+</div>
+<a href="https://hmm663210-ops.github.io/our-trends/" target="_blank" class="trends-btn"> تطقيماتنا وترنداتنا 🐼✨</a>
 
     <p class="light-signature">Don't forget, Light will love you forever, to the moon and back 🌙👑💜</p>
   </div>
@@ -287,7 +299,7 @@
       
       if (isUnlocked) {
         document.getElementById("modalTitle").innerText = gift.title;
-        document.getElementById("modalText").innerText = gift.msg;
+        document.getElementById("modalText").innerHTML = gift.msg;
         launchConfetti();
       } else {
         const now = new Date();
@@ -440,6 +452,89 @@
     renderMilestones();
     setInterval(updateTimers, 1000);
     updateTimers();
+    const loveReasons = [
+  "لأنك عرفتيني معنى الحب الحقيقي 💜✨",
+  "لأنك ما تخوني 🐼🔒",
+  "وأنك تتقبليني على حقيقتي 👑💜",
+  "وأنك تسانديني دايماً ✨🫂",
+  "لأن ضحكتك لحالها كفيلة تعدل مزاجي لو كان أسوأ يوم 🐼💜",
+  "لأنك أحن وأطيب قلب عرفته في حياتي كلها ✨",
+  "لأن وجودك جنبي يحسسني إني أملك الدنيا وما فيها 👑",
+  "لأنك تفهميني من نظرة ومن غير ما أتكلم 💌",
+  "لأن تفاصيلك الصغيرة تخليني أحبك كل يوم أكثر من اللي قبله 🌸",
+  "لأن صوتك هو أحلى لحن أسمعه في يومي 🎶💜",
+  "لأنك خليتي لحياتي معنى ولون ما كان موجود قبلك 🎨✨",
+  "لأنك أمزّ وأجمل إنسانة شافتها عيني بدون منافس 🐼💖",
+  "لأنك دايماً سندي ومصدر قوتي في كل وقت 🔒💜",
+  "لأن عفويتك وبراءتك تسحرني كل مرة أشوفك فيها 🧸✨",
+  "لأنك تخليني أبتسم تلقائياً أول ما يجي اسمك على بالي 😊💜",
+  "لأن كل لحظة معك تتحول لأحلى ذكرى ما تتنسى 📸✨",
+  "لأنك أميرتي وملكتي اللي ما أرضى بغيرها أبداً 👑💜",
+  "لأن اهتمامك بأدق تفاصيلي يحسسني قد إيش أنا غالي عندك 💗",
+  "باختصار.. لأنك أنتِ، وما في بالكون أحد يشبهك 🌙💜"
+];
+let reasonIdx = 0;
+function showLoveReason() {
+  const box = document.getElementById("reason-msg-box");
+  box.innerText = loveReasons[reasonIdx];
+  box.style.display = "block";
+  reasonIdx = (reasonIdx + 1) % loveReasons.length;
+  document.getElementById("reason-count").innerText = reasonIdx === 0 ? loveReasons.length : reasonIdx;
+  launchConfetti();
+}
+
+const moodMessages = {
+  happy: [
+    "يا رب هالفرحة ما تفارق وجهك ولا قلبك ثانية وحدة! فرحتك هي فرحتي يروحي 👑💜",
+    "دوم هالسعادة يا روح لايت، ضحكتك لحالها تنور دنيتي كلها ✨🐼",
+    "أحلى خبر إني أشوفك مبسوطة وفرحانة، الله يديمها عليكِ يا أميرتي 💜🌸"
+  ],
+  miss: [
+    "وأنا مشتاق لك أضعاف أضعاف ما تتخيلين يروحي.. غمضي عيونك واعتبريني جنبك الحين 🐼🫂",
+    "كل ثانية تمر وأنا بعيد عنك أشتاق لك أكثر يا روح لايت 💌💜",
+    "المسافة مجرد أرقام، قلبي دايماً معك ومشتاق لك قد السماء ✨👑"
+  ],
+  sad: [
+    "سلامة قلبك من الضيقة يا روح لايت! أنا جنبك ومعك دايماً، لا تشيلين هم الدنيا وأنا موجود 💜✨",
+    "ما يهون علي أشوفك متضايقة يروحي، فضفضي لي وأنا أسمعك بكل قلبي 🐼🫂",
+    "كل شي بيتعدل بإذن الله، تذكري إن لايت دايماً سندك وما بيخليكِ لحالك أبداً 💜🔒"
+  ],
+  tired: [
+    "يعطيك ألف عافية يروحي، ارتاحي ونامي كويس عشان ترجع طاقتك.. أحبك قد الدنيا 🌙🧸",
+    "سلامتك من التعب يا روح لايت، خذي وقتك في الراحة ولا تضغطين على نفسك 💜✨",
+    "ارتاحي ونامي كويس مزتي، صحتك وراحتك عندي أهم من كل شي بالدنيا 🐼💤"
+  ],
+  angry: [
+    "هدي أعصابك مزتي، ما في شي بالدنيا يستاهل يعكر مزاجك الحلو.. خذي نفس وابتسمي عشاني 🌸💜",
+    "هدي أعصابك مزتي ولا تزعلين نفسك، الدنيا كلها ما تسوى زعل روح لايت 🐼✨",
+    "روّقي وهدي أعصابك مزتي، أنا معك ورايقين سوا دايماً 💜👑"
+  ]
+};
+function showMood(type) {
+  const box = document.getElementById("mood-msg-box");
+  const list = moodMessages[type];
+  box.innerText = list[Math.floor(Math.random() * list.length)];
+  box.style.display = "block";
+}
+
+document.addEventListener("click", function(e) {
+  const icons = ["💜", "✨", "🐼", "🩷"];
+  const heart = document.createElement("span");
+  heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+  heart.style.position = "fixed";
+  heart.style.left = (e.clientX - 10) + "px";
+  heart.style.top = (e.clientY - 10) + "px";
+  heart.style.fontSize = "20px";
+  heart.style.pointerEvents = "none";
+  heart.style.zIndex = "99999";
+  heart.style.transition = "all 1s ease-out";
+  document.body.appendChild(heart);
+  setTimeout(() => {
+    heart.style.transform = "translateY(-50px) scale(1.3)";
+    heart.style.opacity = "0";
+  }, 20);
+  setTimeout(() => heart.remove(), 1000);
+});
   </script>
 </body>
 </html>
