@@ -150,21 +150,39 @@
 
   <canvas id="confetti-canvas"></canvas>
 
-<!-- شاشة الإغلاق المؤقت -->
-<div id="lock-screen" style="background: radial-gradient(circle, #1a1a2e 0%, #0a0a0c 100%);">
-  <div class="lock-box" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
-    <div style="font-size: 3rem; margin-bottom: 12px;">⏳🔒</div>
-    <h2 style="color: #e2c07d; margin-bottom: 10px; font-weight: 700;">الموقع مغلق مؤقتاً</h2>
-    <p style="font-size: 0.95rem; color: #cccccc; line-height: 1.7; margin-bottom: 18px;">
-      تم إغلاق هذه المساحة مؤقتاً التزاماً بقرارنا ونيةً للتوبة.<br>
-      نلتقي مجدداً بإذن الله في الموعد المحدد:
-    </p>
-    <div style="background: rgba(226, 192, 125, 0.12); border: 1px solid rgba(226, 192, 125, 0.4); padding: 12px; border-radius: 15px; color: #ffd700; font-weight: bold; font-size: 1.1rem; margin-bottom: 15px;">
-      23 فبراير 2027
+
+  <!-- شاشة القفل -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div style="font-size: 3.2rem; margin-bottom: 10px;">👑🔒</div>
+      
+      <p style="font-size: 1.05rem; color: #fff; font-weight: bold; margin-bottom: 4px;">
+        حطي الباسوورد عشان تدخلي ✨
+      </p>
+      
+      <p style="font-size: 0.95rem; color: #ffd6e7; direction: ltr; letter-spacing: 1px; margin-bottom: 10px;">
+        I love you 💜
+      </p>
+      
+      <input type="password" id="pass-input" placeholder="اكتبي الباسوورد..." onkeyup="if(event.key==='Enter') checkPass()">
+      <br>
+      <button onclick="checkPass()">دخول 🐼💜</button>
+      
+      <!-- زر نسيان كلمة السر -->
+      <p style="margin-top: 15px; font-size: 0.85rem; color: #ffd6e7; cursor: pointer; text-decoration: underline;" 
+         onclick="document.getElementById('hint-msg').style.display='block'">
+        هل نسيتي كلمة السر..؟ 🤔
+      </p>
+      
+      <!-- التلميح عند الضغط -->
+      <p id="hint-msg" style="display: none; margin-top: 10px; font-size: 0.9rem; color: #fff; background: rgba(255,255,255,0.18); padding: 10px 14px; border-radius: 14px; border: 1px dashed #ffd6e7;">
+        تلميح: هو تاريخ ميلاد أمزز وأجمل شخص فالكون 🐼💜
+      </p>
+
+      <p id="error-msg">الباسوورد غلط يروحي، حاولي مرة ثانية! 🐼💔</p>
     </div>
-    <p id="reopen-countdown" style="font-size: 0.85rem; color: #999999;"></p>
   </div>
-</div>
+
 
   <div class="hearts-bg">
     <span class="floating-heart" style="top: 8%; left: 10%; font-size: 24px;">💜</span>
@@ -539,18 +557,7 @@ document.addEventListener("click", function(e) {
   }, 20);
   setTimeout(() => heart.remove(), 1000);
 });
-    const reopenDate = new Date("2027-02-23T00:00:00");
-function checkReopenStatus() {
-  const now = new Date();
-  const diff = reopenDate - now;
-  if (diff <= 0) {
-    document.getElementById("lock-screen").style.display = "none";
-  } else {
-    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    document.getElementById("reopen-countdown").innerText = `متبقي ${days} يوم على انتهاء فترة الإغلاق`;
-  }
-}
-checkReopenStatus();
+
 
   </script>
 </body>
